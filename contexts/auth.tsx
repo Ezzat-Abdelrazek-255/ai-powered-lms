@@ -1,7 +1,6 @@
 "use client";
 
 import { unprotectedRoutes, testCredientials } from "@/constants/auth";
-import { useLocalStorage } from "@uidotdev/usehooks";
 import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
@@ -9,6 +8,7 @@ import {
   SetStateAction,
   useContext,
   useLayoutEffect,
+  useState,
 } from "react";
 
 const contextInitialValue = {
@@ -32,7 +32,7 @@ type AuthContextProviderProps = {
 };
 
 const AuthContextProvider = function({ children }: AuthContextProviderProps) {
-  const [isLoggedIn, setIsLoggedIn] = useLocalStorage("isLoggedIn", false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
