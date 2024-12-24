@@ -1,6 +1,6 @@
 "use client";
 
-import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
+import { UploadDropzone } from "@/lib/uploadthing";
 
 export default function Home() {
   return (
