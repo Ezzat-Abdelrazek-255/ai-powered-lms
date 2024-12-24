@@ -1,4 +1,3 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
 import CourseHeader from "@/components/pages/course/ui/course-header";
 import React from "react";
 

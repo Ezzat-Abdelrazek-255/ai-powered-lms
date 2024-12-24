@@ -1,6 +1,6 @@
 import CourseHome from "@/components/pages/course/home/course-home";
 import CourseSidebar from "@/components/pages/course/home/course-sidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import React from "react";
 
 const CoursePage = () => {

@@ -3,35 +3,14 @@ import Logo from "@/components/ui/logo";
 import { MessageCircle, Bell, GraduationCap } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 import Navigation from "./navigation";
-import {
-  Cloud,
-  CreditCard,
-  Github,
-  Keyboard,
-  LifeBuoy,
-  LogOut,
-  Mail,
-  MessageSquare,
-  Plus,
-  PlusCircle,
-  Settings,
-  User,
-  UserPlus,
-  Users,
-} from "lucide-react";
+import { LogOut, User } from "lucide-react";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -40,7 +19,7 @@ type HeaderProps = {
   navItems: NavItem[];
 };
 
-const Header = ({ children, navItems }: HeaderProps) => {
+const Header = ({ navItems }: HeaderProps) => {
   return (
     <header className="grid h-[var(--header-height)] grid-rows-[1fr_auto] border-b-[1px] border-b-border bg-white-100 px-8 pt-6 shadow-lg">
       <div className="mb-6 flex items-center justify-between">
