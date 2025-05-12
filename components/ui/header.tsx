@@ -21,7 +21,7 @@ type HeaderProps = {
 
 const Header = ({ navItems }: HeaderProps) => {
   return (
-    <header className="grid h-[var(--header-height)] grid-rows-[1fr_auto] border-b-[1px] border-b-border bg-white-100 px-8 pt-6 shadow-lg">
+    <header className="grid h-[var(--header-height)] grid-rows-[1fr_auto] border-b-[1px] border-b-white/20 bg-white/5 px-[var(--container-px)] pt-[1.6rem] backdrop-blur-sm">
       <div className="mb-6 flex items-center justify-between">
         <Logo />
         <div className="flex items-center gap-2">

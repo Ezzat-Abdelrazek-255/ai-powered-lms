@@ -1,17 +1,34 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import AuthContextProvider from "@/contexts/auth";
+import PulseBackground from "@/components/ui/pulse-background";
+import Noise from "@/components/ui/noise";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const laygrotesk = localFont({
+  src: [
+    {
+      path: "./fonts/laygrotesk-trial-regular.otf",
+      weight: "400",
+    },
+    {
+      path: "./fonts/laygrotesk-trial-semibold.otf",
+      weight: "600",
+    },
+    {
+      path: "./fonts/laygrotesk-trial-bold.otf",
+      weight: "700",
+    },
+  ],
+  variable: "--font-laygrotesk",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "700"],
+  variable: "--font-ibm-plex-mono",
 });
 
 export const metadata: Metadata = {
@@ -27,9 +44,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${laygrotesk.variable} ${ibmPlexMono.variable} antialiased`}
       >
-        <AuthContextProvider>{children}</AuthContextProvider>
+        <Noise />
+        <PulseBackground />
+        {/* <AuthContextProvider>{children}</AuthContextProvider> */}
+        {children}
       </body>
     </html>
   );

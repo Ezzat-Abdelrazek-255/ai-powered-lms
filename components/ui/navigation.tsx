@@ -15,12 +15,12 @@ const Navigation = ({ navItems }: NavigationProps) => {
   const pathname = usePathname();
   return (
     <nav>
-      <ul className="flex gap-8 font-bold leading-[85%]">
+      <ul className="flex gap-[2.4rem] leading-[85%]">
         {navItems.map((item) => (
           <li
             key={item.label}
             className={cn(
-              "relative pb-2",
+              "relative pb-[1.2rem]",
               pathname === item.href && "text-primary",
             )}
           >

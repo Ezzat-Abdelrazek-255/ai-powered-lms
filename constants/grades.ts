@@ -3,5 +3,4 @@ export const gradesTableHeadings = [
   "Grade",
   "Range",
   "Percentage",
-  "Contribution to course",
 ];

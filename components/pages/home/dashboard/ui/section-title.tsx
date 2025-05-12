@@ -7,11 +7,7 @@ type SectionTitleProps = {
 };
 
 const SectionTitle = ({ children, className }: SectionTitleProps) => {
-  return (
-    <h2 className={cn("text-2xl font-bold leading-[85%]", className)}>
-      {children}
-    </h2>
-  );
+  return <h2 className={cn("h2", className)}>{children}</h2>;
 };
 
 export default SectionTitle;

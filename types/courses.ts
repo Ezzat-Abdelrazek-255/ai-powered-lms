@@ -14,6 +14,7 @@ export type Course = {
   title: string;
   department: string;
   code: string;
-  coverImgSrc: string;
+  keyModules: string[];
+  coverImgSrc?: string;
   content?: ContentBlock[];
 };

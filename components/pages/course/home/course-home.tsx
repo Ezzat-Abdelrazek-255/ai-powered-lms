@@ -3,30 +3,35 @@ import CourseSectionTitle from "../ui/course-section-title";
 import { courses } from "@/constants/course";
 import { ContentBlock } from "@/types/courses";
 import CourseAccordion from "./course-accordion";
+import AbstractSvg from "../../../../public/vectors/abstract-1.svg";
 
 const CourseHome = () => {
   const activeCourseContent = courses[0].content as ContentBlock[];
   return (
-    <section className="py-8">
-      <CourseSectionTitle className="mb-20">
-        ASU111s (UG2018) - Human Rights (28002)
-      </CourseSectionTitle>
+    <section className="px-[var(--container-px)]">
+      <div className="mb-[8rem] border-b-[1px] border-b-white/20">
+        <CourseSectionTitle className="mb-[2.4rem] mt-[3.2rem] text-center">
+          ASU111s (UG2018) - Human Rights (28002)
+        </CourseSectionTitle>
+      </div>
 
-      <div className="mx-auto max-w-[650px]">
+      <div className="mx-auto max-w-[65rem] space-y-[3.2rem]">
         {activeCourseContent.map((content) => (
           <CourseAccordion
             key={content.title}
             trigger={content.title}
             value={content.title}
           >
-            <p className="mb-6 text-muted-foreground">{content.description}</p>
-            <ul className="flex flex-col gap-4">
+            <p className="mb-[2.4rem] leading-[150%] text-black/60">
+              {content.description}
+            </p>
+            <ul className="flex flex-col gap-[1.6rem] font-mono uppercase">
               {content.materials?.map((material) => (
                 <li
                   key={material.title}
-                  className="flex items-center gap-2 border-b-border pb-2 [&:not(:last-child)]:border-b-[1px]"
+                  className="flex items-center gap-[0.8rem] border-b-black/20 pb-[0.8rem] [&:not(:last-child)]:border-b-[1px]"
                 >
-                  <span>{material.icon && <material.icon />}</span>
+                  <AbstractSvg className="h-[1.4rem] w-[1.4rem] fill-black" />
                   <span>{material.title}</span>
                 </li>
               ))}

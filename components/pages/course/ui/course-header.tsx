@@ -17,13 +17,10 @@ const CourseHeader = ({ courseCode }: CourseHeaderProps) => {
       label: "Participants",
       href: `${rootHrefSrc}/participants`,
     },
+
     {
-      label: "Grades",
-      href: `${rootHrefSrc}/grades`,
-    },
-    {
-      label: "Assignments",
-      href: `${rootHrefSrc}/assignments`,
+      label: "Submissions",
+      href: `${rootHrefSrc}/submissions`,
     },
     {
       label: "Quizzes",

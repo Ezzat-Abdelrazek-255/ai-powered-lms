@@ -1,7 +1,9 @@
-import { Button } from "@/components/ui/button";
+import PrimaryButton from "@/components/ui/primary-button";
 import { cn } from "@/lib/utils";
 import { TimelineItem } from "@/types/timeline";
 import React from "react";
+import AbstractSvg from "../../../../../public/vectors/abstract-6.svg";
+import ArrowSvg from "../../../../../public/vectors/arrow.svg";
 
 type TimelineCardProps = { timelineItem: TimelineItem };
 
@@ -24,27 +26,35 @@ const TimelineCard = ({
   const date = new Intl.DateTimeFormat("en-GB", dateOptions).format(deadline);
   const time = new Intl.DateTimeFormat("en-GB", timeOptions).format(deadline);
   return (
-    <article className="flex flex-col gap-6 rounded-[0.5rem] border-[1px] border-foreground p-4 leading-[85%]">
-      <h3 className="flex items-center justify-between font-bold">
-        <span className="text-2xl">{date}</span>
+    <article className="flex flex-col gap-6 rounded-sm bg-gray-dark p-[1.6rem] leading-[85%]">
+      <h3 className="flex items-start justify-between font-mono">
+        <span className="flex flex-col gap-[0.8rem]">
+          <span>{date}</span>
+          <span className="text-[1rem] text-white/80">
+            {associatedCourse.code} - {associatedCourse.title}
+          </span>
+        </span>
         <span>{time}</span>
       </h3>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <p className="text-muted-foreground">{title}</p>
+          <div className="flex items-center justify-between border-y-[1px] border-white/40 py-[0.8rem] font-bold">
+            <div className="flex items-center gap-[0.6rem]">
+              <AbstractSvg className="w-[1.6rem] fill-white" />
+              <p>{title}</p>
+            </div>
+            <ArrowSvg className="w-[1.6rem] fill-white" />
+          </div>
           <p
             className={cn(
               "flex items-center",
               requiresAction && "text-destructive",
             )}
           >
-            {requiresAction && <span>Assignment requires action - </span>}
-            <span>{associatedCourse}</span>
+            {/* {requiresAction && <span>Assignment requires action </span>} */}
           </p>
         </div>
-        <Button className="h-[2rem] self-end p-2 shadow-md">
-          Add Submission
-        </Button>
+        <PrimaryButton className="self-end">Add Submission</PrimaryButton>
       </div>
     </article>
   );

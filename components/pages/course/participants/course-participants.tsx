@@ -6,8 +6,13 @@ import CourseSection from "../ui/course-section";
 const CourseParticipants = () => {
   return (
     <CourseSection>
-      <CourseSectionTitle className="mb-12">Participants</CourseSectionTitle>
-      <ul className="grid grid-cols-3 gap-4">
+      <div className="mb-[8rem] border-b-[1px] border-b-white/20">
+        <div className="mx-auto mb-[2.4rem] max-w-[var(--container-max-width)] space-y-[1.6rem]">
+          <CourseSectionTitle>Participants</CourseSectionTitle>
+          <p className="text-white/80">100 participants found</p>
+        </div>
+      </div>
+      <ul className="mx-auto grid max-w-[var(--container-max-width)] grid-cols-3 gap-[1.6rem]">
         {[...new Array(9)].map((_, i) => (
           <li key={i}>
             <ParticipantCard />

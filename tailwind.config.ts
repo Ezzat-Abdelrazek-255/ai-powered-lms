@@ -11,10 +11,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        black: "hsl(var(--color-black))",
+        white: "hsl(var(--color-white))",
+        primary: "hsl(var(--color-primary))",
+        yellow: "hsl(var(--color-yellow))",
+        beige: "hsl(var(--color-beige))",
+        green: "hsl(var(--color-green))",
+        orange: "hsl(var(--color-orange))",
+        blue: "hsl(var(--color-blue))",
+        red: "hsl(var(--color-red))",
+        "gray-dark": "hsl(var(--color-gray-dark))",
+        "gray-dark-2": "hsl(var(--color-gray-dark-2))",
+        "gray-light": "hsl(var(--color-gray-light))",
+        "red-dark": "hsl(var(--color-red-dark))",
+        "yellow-dark": "hsl(var(--color-yellow-dark))",
+        "green-dark": "hsl(var(--color-green-dark))",
+        "orange-dark": "hsl(var(--color-orange-dark))",
+        "beige-light": "hsl(var(--color-beige-light))",
+        "beige-dark": "hsl(var(--color-beige-dark))",
+
         background: "hsl(var(--background))",
-        white: {
-          "100": "hsl(var(--white-100))",
-        },
         foreground: "hsl(var(--foreground))",
         card: {
           DEFAULT: "hsl(var(--card))",
@@ -23,10 +39,6 @@ const config: Config = {
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
-        },
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -66,14 +78,19 @@ const config: Config = {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "16px",
+        md: "12px",
+        sm: "8px",
+        xs: "4px",
       },
       boxShadow: {
         sm: "0 1px 2px 0 rgba(0,0,0,0.05)",
         md: "0 2px 8px rgba(0,0,0,0.1)",
         lg: "0 4px 8px rgba(0,0,0,0.05)",
+      },
+      fontFamily: {
+        sans: "var(--font-laygrotesk)",
+        mono: "var(--font-ibm-plex-mono)",
       },
       keyframes: {
         "accordion-down": {
@@ -96,6 +113,11 @@ const config: Config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      zIndex: {
+        hidden: "-1",
+        base: "10",
+        noise: "9999999999",
       },
     },
   },

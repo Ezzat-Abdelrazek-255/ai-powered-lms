@@ -7,19 +7,21 @@ import TimelineCard from "./timeline-card";
 const Timeline = () => {
   return (
     <section>
-      <SectionTitle className="mb-4">Timeline</SectionTitle>
-      <Input
-        type="search"
-        placeholder="Search"
-        className="mb-4 w-full border-[1px] border-foreground"
-      />
-      <ul className="flex flex-col gap-4">
-        {timelineItems.map((item) => (
-          <li key={item.title}>
-            <TimelineCard timelineItem={item} />
-          </li>
-        ))}
-      </ul>
+      <div className="mb-[2.4rem] border-b-[1px] border-b-white/20 pb-[2.4rem]">
+        <SectionTitle className="pl-[var(--container-px)]">
+          Timeline
+        </SectionTitle>
+      </div>
+      <div className="pl-[var(--container-px)]">
+        <Input type="search" placeholder="Search" className="mb-[2.4rem]" />
+        <ul className="flex flex-col gap-4">
+          {timelineItems.map((item) => (
+            <li key={item.title}>
+              <TimelineCard timelineItem={item} />
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 };

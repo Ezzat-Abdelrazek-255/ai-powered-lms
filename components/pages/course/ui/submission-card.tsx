@@ -1,29 +1,53 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import RelativeLink from "@/components/ui/relative-link";
+import AbstractSvg from "../../../../public/vectors/abstract-1.svg";
+import AbstractSvg2 from "../../../../public/vectors/abstract-2.svg";
+import AbstractSvg3 from "../../../../public/vectors/abstract-4.svg";
+import DocumentSvg from "../../../../public/vectors/document.svg";
+import PrimaryButton from "@/components/ui/primary-button";
+import Link from "next/link";
 
-const SubmissionCard = () => {
+const SubmissionCard = ({
+  variant = "default",
+}: {
+  variant?: "default" | "quiz";
+}) => {
   return (
-    <article className="flex items-center justify-between rounded-[0.5rem] border-[1px] border-foreground p-4 leading-[85%]">
-      <h3 className="flex flex-col gap-4 leading-[85%]">
-        <span className="font-bold">12 November 2024</span>
-        <span>Tuesday, 14:15</span>
-      </h3>
-      <div className="flex flex-col gap-4">
-        <span className="font-bold">Initial Reflections</span>
-        <span className="text-muted-foreground">Feline Welfare</span>
-      </div>
-      <div className="flex flex-col gap-4 text-muted-foreground">
-        <span>Not Submitted</span>
-        <span>No feedback</span>
-      </div>
-      <span className="font-bold text-destructive">
-        Assignment requires action
-      </span>
-      <Button className="h-[2rem] p-4 shadow-md">
-        <RelativeLink href="/fha">Submit</RelativeLink>
-      </Button>
-    </article>
+    <Link href="/fhalhfa/submissions/submissionId" className="cursor-pointer">
+      <article className="flex items-center justify-between rounded-sm bg-beige px-[1.6rem] py-[2.4rem] leading-[85%] text-black">
+        <h3 className="flex flex-col gap-[0.8rem] leading-[85%]">
+          <span className="font-bold">12 November 2024</span>
+          <span className="text-[1.2rem] text-black/80">Tuesday, 14:15</span>
+        </h3>
+        <div className="flex items-center gap-[0.8rem]">
+          <DocumentSvg className="w-[1.6rem]" />
+          <div className="flex flex-col gap-[0.8rem]">
+            <span className="text-[1.6rem] font-bold underline">
+              Assignment 1
+            </span>
+            <span className="text-black/80">Feline Welfare</span>
+          </div>
+        </div>
+        <div className="flex flex-col gap-[0.8rem] font-mono uppercase text-black">
+          <span className="flex items-center gap-[0.8rem]">
+            <AbstractSvg className="w-[1.6rem]" />
+            {variant === "quiz" ? "Not Attempted" : "Not Submitted"}
+          </span>
+          <span className="flex items-center gap-[0.8rem]">
+            <AbstractSvg2 className="h-[1.6rem]" />
+            No feedback
+          </span>
+        </div>
+        <span className="flex items-end gap-[0.8rem] rounded-full bg-red p-[0.8rem] font-bold text-white">
+          <AbstractSvg3 className="h-[1.4rem] fill-white" />
+          {variant === "quiz"
+            ? "Quiz starts in 3 minutes"
+            : "Assignment requires action"}
+        </span>
+        <PrimaryButton variant="secondary">
+          {variant === "quiz" ? "Attempt" : "Submit"}
+        </PrimaryButton>
+      </article>
+    </Link>
   );
 };
 

@@ -8,12 +8,7 @@ type CourseSectionProps = {
 
 const CourseSection = ({ children, className }: CourseSectionProps) => {
   return (
-    <section
-      className={cn(
-        "mx-auto max-w-[var(--container-max-width)] py-8",
-        className,
-      )}
-    >
+    <section className={cn("px-[var(--container-px)] pt-[3.2rem]", className)}>
       {children}
     </section>
   );

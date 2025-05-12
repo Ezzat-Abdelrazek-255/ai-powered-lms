@@ -10,13 +10,7 @@ const CourseSectionTitle = ({
   children,
   className,
 }: CourseSectionTitleProps) => {
-  return (
-    <h2
-      className={cn("text-center text-3xl font-bold leading-[85%]", className)}
-    >
-      {children}
-    </h2>
-  );
+  return <h2 className={cn("h2", className)}>{children}</h2>;
 };
 
 export default CourseSectionTitle;

@@ -7,11 +7,9 @@ type HomeLayoutProps = {
 
 const HomeLayout = ({ children }: HomeLayoutProps) => {
   return (
-    <div className="grid min-h-screen grid-rows-[auto_1fr]">
+    <div className="grid min-h-screen grid-rows-[auto_1fr] pb-[var(--container-py)]">
       <HomeHeader />
-      <main className="mx-auto w-full max-w-[var(--main-container-max-width)]">
-        {children}
-      </main>
+      <main>{children}</main>
     </div>
   );
 };
