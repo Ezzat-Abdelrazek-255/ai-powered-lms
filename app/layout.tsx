@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import AuthContextProvider from "@/contexts/auth";
+// import AuthContextProvider from "@/contexts/auth";
 import PulseBackground from "@/components/ui/pulse-background";
 import Noise from "@/components/ui/noise";
 

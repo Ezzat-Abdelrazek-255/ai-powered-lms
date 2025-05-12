@@ -1,11 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthContext } from "@/contexts/auth";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import EnterSvg from "../../../public/vectors/enter.svg";
 import PrimaryButton from "@/components/ui/primary-button";
 
 const LoginForm = () => {

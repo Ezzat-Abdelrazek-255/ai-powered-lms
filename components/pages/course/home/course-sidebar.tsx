@@ -1,6 +1,4 @@
 import * as React from "react";
-import { courses } from "@/constants/course";
-import { ContentBlock } from "@/types/courses";
 import {
   Accordion,
   AccordionContent,

@@ -1,6 +1,5 @@
 import React from "react";
 import LoginForm from "./login-form";
-import { testCredientials } from "@/constants/auth";
 
 const Login = () => {
   return (

@@ -9,16 +9,7 @@ import AbstractSvg4 from "@/public/vectors/abstract-4.svg";
 import AbstractSvg5 from "@/public/vectors/abstract-5.svg";
 import AbstractSvg6 from "@/public/vectors/abstract-6.svg";
 import AbstractSvg7 from "@/public/vectors/abstract-7.svg";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Upload from "@/components/ui/upload";
 
 const keys = [
