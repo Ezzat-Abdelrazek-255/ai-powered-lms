@@ -13,10 +13,16 @@ type NavigationProps = {
 
 const Navigation = ({ navItems }: NavigationProps) => {
   const pathname = usePathname();
+  const role = "instructor";
+  const filteredNavItems = navItems.filter((item) => {
+    if (item.label === "Quizzes") return role !== "instructor";
+    if (item.label === "Questions") return role === "instructor";
+    return true;
+  });
   return (
     <nav>
       <ul className="flex gap-[2.4rem] leading-[85%]">
-        {navItems.map((item) => (
+        {filteredNavItems.map((item) => (
           <li
             key={item.label}
             className={cn(

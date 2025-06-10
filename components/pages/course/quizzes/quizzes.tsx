@@ -1,6 +1,6 @@
 import React from "react";
 import CourseSectionTitle from "../ui/course-section-title";
-import SubmissionCard from "../ui/submission-card";
+import SubmissionCard from "../submissions/submission-card";
 import CourseSection from "../ui/course-section";
 
 const CourseQuizzes = () => {

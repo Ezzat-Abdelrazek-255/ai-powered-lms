@@ -24,7 +24,7 @@ const CourseAccordion = ({
     >
       <AccordionItem value={value} className="border-none">
         <AccordionTrigger className="text-[2.8rem] font-bold leading-[85%]">
-          {trigger}
+          {value}
         </AccordionTrigger>
         <AccordionContent className="py-0">{children}</AccordionContent>
       </AccordionItem>

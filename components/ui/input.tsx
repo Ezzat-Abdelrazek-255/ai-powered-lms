@@ -7,6 +7,8 @@ const inputVariants = cva("rounded-xs", {
   variants: {
     variant: {
       default: "w-full text-white bg-gray-dark placeholder:text-white/60",
+      beige:
+        "col-span-3 border border-gray-light bg-beige placeholder-gray-light text-gray-dark-2",
     },
     inputSize: {
       default: "text-[1.8rem] h-[4rem]  px-[1.2rem] ",
@@ -21,7 +23,7 @@ const inputVariants = cva("rounded-xs", {
 
 export interface InputProps
   extends React.ComponentProps<"input">,
-  VariantProps<typeof inputVariants> {
+    VariantProps<typeof inputVariants> {
   asChild?: boolean;
 }
 

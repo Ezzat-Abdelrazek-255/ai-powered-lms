@@ -1,16 +1,19 @@
 import React from "react";
 import CourseSectionTitle from "../ui/course-section-title";
-import SubmissionCard from "../ui/submission-card";
+import SubmissionCard from "../submissions/submission-card";
 import CourseSection from "../ui/course-section";
 
 const CourseAssignments = () => {
+  const role = "instructor";
   return (
     <CourseSection>
       <div className="mb-[8rem] border-b-[1px] border-b-white/20">
         <div className="mx-auto mb-[2.4rem] max-w-[var(--container-max-width)] space-y-[1.6rem]">
           <CourseSectionTitle>Submissions</CourseSectionTitle>
           <p className="text-white/80">
-            You have 3 assignments due date in the upcoming 3 days
+            {role === "instructor"
+              ? "You have 3 unreviewed submissions"
+              : "You have 3 assignments due date in the upcoming 3 days"}
           </p>
         </div>
       </div>

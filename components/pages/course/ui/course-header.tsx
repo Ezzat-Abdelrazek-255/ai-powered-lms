@@ -26,6 +26,10 @@ const CourseHeader = ({ courseCode }: CourseHeaderProps) => {
       label: "Quizzes",
       href: `${rootHrefSrc}/quizzes`,
     },
+    {
+      label: "Questions",
+      href: `${rootHrefSrc}/questions`,
+    },
   ];
 
   return (
