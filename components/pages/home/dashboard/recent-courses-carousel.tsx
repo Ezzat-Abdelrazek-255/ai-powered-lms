@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import RecentCourseCard from "./ui/recent-course-card";
 import { Course } from "@/types/courses";
 

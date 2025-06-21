@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import React from "react";
 import ArrowSvg from "../../../../public/vectors/arrow.svg";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { Swiper } from "swiper/types";
 
 const ALPHABET = [

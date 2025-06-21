@@ -13,6 +13,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { logout } from "@/services/auth";
+import LogoutButton from "./logout-button";
 
 type HeaderProps = {
   children?: React.ReactNode;
@@ -64,7 +66,7 @@ const Header = ({ navItems }: HeaderProps) => {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <LogOut />
-                <span>Log out</span>
+                <LogoutButton />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

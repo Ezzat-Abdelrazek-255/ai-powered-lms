@@ -4,7 +4,7 @@ import * as React from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import ArrowSvg from "../../public/vectors/arrow.svg";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 const Accordion = AccordionPrimitive.Root;
 

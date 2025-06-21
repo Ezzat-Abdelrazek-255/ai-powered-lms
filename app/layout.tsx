@@ -2,9 +2,13 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-// import AuthContextProvider from "@/contexts/auth";
 import PulseBackground from "@/components/ui/pulse-background";
 import Noise from "@/components/ui/noise";
+import Providers from "@/providers";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "@/app/api/uploadthing/core";
+
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 
 const laygrotesk = localFont({
   src: [
@@ -46,10 +50,12 @@ export default function RootLayout({
       <body
         className={`${laygrotesk.variable} ${ibmPlexMono.variable} antialiased`}
       >
-        <Noise />
-        <PulseBackground />
-        {/* <AuthContextProvider>{children}</AuthContextProvider> */}
-        {children}
+        <Providers>
+          <Noise />
+          <PulseBackground />
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+          {children}
+        </Providers>
       </body>
     </html>
   );

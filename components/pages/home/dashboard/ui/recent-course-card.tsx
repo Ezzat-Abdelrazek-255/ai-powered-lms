@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import { Course } from "@/types/courses";
+import { cn } from "@/utils";
 import React from "react";
 
 const RecentCourseCard = ({

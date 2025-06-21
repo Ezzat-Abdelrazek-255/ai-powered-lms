@@ -1,5 +1,5 @@
 import PrimaryButton from "@/components/ui/primary-button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { TimelineItem } from "@/types/timeline";
 import React from "react";
 import AbstractSvg from "../../../../../public/vectors/abstract-6.svg";

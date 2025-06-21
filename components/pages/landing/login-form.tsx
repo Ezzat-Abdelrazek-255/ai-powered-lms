@@ -1,63 +1,53 @@
 "use client";
 
+import ErrorMsg from "@/components/ui/error-msg";
 import { Input } from "@/components/ui/input";
-import { useAuthContext } from "@/contexts/auth";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import PrimaryButton from "@/components/ui/primary-button";
+import { login } from "@/services/auth";
+import { AuthInputs } from "@/types";
+import { useState } from "react";
+import { useRouter } from "@bprogress/next/app";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [formError, setFormError] = useState("");
-  const authContext = useAuthContext();
+  const { register, handleSubmit } = useForm<AuthInputs>();
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const [error, setError] = useState("");
 
-  const handleEmailChange = function(e: React.ChangeEvent<HTMLInputElement>) {
-    setEmail(e.target.value);
-  };
-  const handlePasswordChange = function(
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = function(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (email !== authContext.email || password !== authContext.password) {
-      console.log(password === authContext.password);
-      console.log(password, authContext.password);
-      setFormError("Invalid email or password. Please try again.");
-    } else {
-      authContext.setIsLoggedIn(true);
-      router.push("/dashboard");
+  const onSubmit: SubmitHandler<AuthInputs> = async (data) => {
+    try {
+      setIsLoading(true);
+      setError("");
+      return await login(data, router);
+    } catch (error) {
+      setIsLoading(false);
+      if (error instanceof Error) setError(error.message);
     }
   };
 
   return (
-    <form className="space-y-[1.6rem]" action="#" onSubmit={handleSubmit}>
-      <Input
-        value={email}
-        onChange={handleEmailChange}
-        type="email"
-        placeholder="Email"
-        required
-      />
-      <Input
-        value={password}
-        type="password"
-        onChange={handlePasswordChange}
-        placeholder="Password"
-        required
-      />
-      {formError && <p className="text-destructive">{formError}</p>}
-      {/* <Button className="relative w-full"> */}
-      {/*   <span className="absolute left-[1.2rem] top-1/2 -translate-y-1/2"> */}
-      {/*     <EnterSvg /> */}
-      {/*   </span> */}
-      {/*   Login */}
-      {/* </Button> */}
-      <PrimaryButton className="w-full">Login</PrimaryButton>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-[1.6rem]">
+      <div className="space-y-[0.8rem]">
+        <Input
+          {...register("email")}
+          name="email"
+          type="email"
+          placeholder="Email"
+          required
+        />
+        <Input
+          {...register("password")}
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+        />
+      </div>
+      <PrimaryButton className="w-full" isLoading={isLoading}>
+        Login
+      </PrimaryButton>
+      {error && <ErrorMsg errorMsg={error} />}
     </form>
   );
 };

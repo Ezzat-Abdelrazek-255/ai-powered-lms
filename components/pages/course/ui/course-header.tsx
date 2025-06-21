@@ -7,15 +7,15 @@ type CourseHeaderProps = {
 };
 
 const CourseHeader = ({ courseCode }: CourseHeaderProps) => {
-  const rootHrefSrc = `/${courseCode}`;
+  const rootHrefSrc = `/course/${courseCode}`;
   const courseNavItems: NavItem[] = [
     {
       label: "Home",
       href: rootHrefSrc,
     },
     {
-      label: "Participants",
-      href: `${rootHrefSrc}/participants`,
+      label: "Students",
+      href: `${rootHrefSrc}/students`,
     },
 
     {
@@ -25,6 +25,10 @@ const CourseHeader = ({ courseCode }: CourseHeaderProps) => {
     {
       label: "Quizzes",
       href: `${rootHrefSrc}/quizzes`,
+    },
+    {
+      label: "Questions",
+      href: `${rootHrefSrc}/questions`,
     },
   ];
 

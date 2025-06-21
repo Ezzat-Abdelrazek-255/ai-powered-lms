@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import BackgroundSvg from "../../public/vectors/background.svg";
-import BackgroundPulseSvg from "../../public/vectors/background-pulse.svg";
+import { BackgroundSvg, BackgroundPulseSvg } from "./icons";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
@@ -22,18 +21,18 @@ const PulseBackground = () => {
       });
 
       // Animate the elements.
-      tl.to(".background-pulse_svg__p1", {
+      tl.to(".p1", {
         strokeDashoffset: "-934px",
       })
         .to(
-          ".background-pulse_svg__p2",
+          ".p2",
           {
             strokeDashoffset: "-2008px",
           },
           0,
         ) // starting at the same time as p1 animation
         .to(
-          ".background-pulse_svg__p3",
+          ".p3",
           {
             strokeDashoffset: "934px",
           },

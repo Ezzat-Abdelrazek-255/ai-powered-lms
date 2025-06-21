@@ -98,6 +98,10 @@ html {
     @apply text-[2.8rem] font-bold leading-[85%];
   }
 
+  .h4 {
+    @apply text-[2.2rem] font-bold leading-none;
+  }
+
   .plus-stroke {
     @apply h-full w-full stroke-gray-dark stroke-[1px];
   }
@@ -121,17 +125,17 @@ html {
   overflow: visible !important;
 }
 
-.background-pulse_svg__p1 {
+.p1 {
   stroke-dasharray: 300 10000;
   stroke-dashoffset: 300;
 }
 
-.background-pulse_svg__p2 {
+.p2 {
   stroke-dasharray: 300 10000;
   stroke-dashoffset: 300;
 }
 
-.background-pulse_svg__p3 {
+.p3 {
   stroke-dasharray: 300 10000;
   stroke-dashoffset: -924;
 }

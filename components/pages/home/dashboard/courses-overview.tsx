@@ -1,10 +1,14 @@
 import { Input } from "@/components/ui/input";
-import { courses } from "@/constants/course";
 import React from "react";
-import CourseCard from "./ui/course-card";
 import SectionTitle from "./ui/section-title";
+import { getCourses } from "@/services/course";
+import { createClient } from "@/libs/supabase/server";
+import CoursesList from "./courses-list";
 
-const CoursesOverview = () => {
+const CoursesOverview = async () => {
+  const supabase = await createClient();
+  const courses = await getCourses(supabase);
+
   return (
     <section className="grid h-full grid-rows-[auto_auto_1fr] pr-[var(--container-px)]">
       <div className="mb-[2.4rem] border-y-[1px] border-y-white/20 py-[2.4rem]">
@@ -15,13 +19,7 @@ const CoursesOverview = () => {
         placeholder="Search"
         className="mb-4 w-full border-[1px] border-foreground"
       />
-      <ul className="grid h-full grid-cols-3 justify-between gap-8">
-        {courses.map((course) => (
-          <li key={course.code}>
-            <CourseCard course={course} />
-          </li>
-        ))}
-      </ul>
+      {courses && <CoursesList courses={courses} />}
     </section>
   );
 };

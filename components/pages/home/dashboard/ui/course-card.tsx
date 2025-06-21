@@ -1,55 +1,81 @@
 import { Course } from "@/types/courses";
+import { cn } from "@/utils";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
-type CourseCardProps = {
-  course: Course;
-};
-
-const CourseCard = ({
-  course: { title, department, code, keyModules },
-}: CourseCardProps) => {
+const CourseCard = ({ course, state }: { course: Course; state: string }) => {
+  const instructors = course.instructor;
   return (
-    <article className="relative z-0 grid grid-cols-[16.4rem_1fr] gap-x-[1.2rem] overflow-hidden rounded-md bg-beige p-[1.6rem] text-black">
-      <div className="pointer-events-none absolute inset-0 z-base h-full w-full bg-[url(/images/noise.png)] opacity-40 mix-blend-soft-light" />
-      <div className="relative inset-0 z-[-1] h-full w-full overflow-hidden rounded-md">
+    <Link
+      href={`/course/${course.courseId}`}
+      className={cn(
+        "group/item relative z-0 grid grid-cols-[16.4rem_1fr] gap-x-[1.2rem] overflow-hidden rounded-md bg-beige p-[1.6rem] text-black transition-all",
+        state === "active" && "opacity-100 blur-[0px]",
+        state === "inactive" && "opacity-40 blur-[2px]",
+      )}
+    >
+      <span className="pointer-events-none absolute inset-0 z-base block h-full w-full bg-[url(/images/noise.png)] opacity-40 mix-blend-soft-light transition-all" />
+      <span className="relative inset-0 z-[-1] block h-full w-full overflow-hidden rounded-md">
         <Image
-          src="/images/course-sample.png"
+          src={course.coverImg}
           fill
           sizes="90vw"
-          className="h-full w-full object-cover object-center saturate-0"
-          alt={title}
+          className="h-full w-full object-cover object-center saturate-0 transition-all group-hover/item:scale-110 group-hover/item:saturate-100"
+          alt={course.title}
         />
-      </div>
-      <div className="pt-[1.6rem]">
-        <div className="mb-[1.6rem] flex flex-col gap-[0.8rem]">
-          <h3 className="text-[1.8rem] font-bold leading-[85%]">
-            {department}
-          </h3>
-          <p className="font-mono text-[1rem] leading-[85%] text-black/80">
-            {code} - {title}
+        <span className="absolute inset-0 z-10 grid h-full w-full place-content-center bg-black/80 text-center text-[2.4rem] font-bold leading-tight text-white opacity-0 transition-all group-hover/item:opacity-100">
+          Click to
+          <br />
+          Peek Inside
+        </span>
+      </span>
+      <span className="block pt-[1.6rem]">
+        <span className="mb-[1.6rem] flex flex-col gap-[1.2rem]">
+          <span className="flex items-center justify-between">
+            <h3 className="text-[1.8rem] font-bold leading-none">
+              {course.department}
+            </h3>
+            <span className="w-fit rounded-full bg-green px-[1.2rem] pb-[0.4rem] pt-[0.8rem] text-[1rem] font-bold uppercase leading-none text-green-dark">
+              {course.status}
+            </span>
+          </span>
+          <p className="flex flex-col gap-[0.4rem] font-mono text-[1rem] leading-none text-black/80">
+            <span>{course.title}</span>
           </p>
-        </div>
-        <div className="mb-[1.2rem] text-[1rem]">
-          <div className="flex flex-col border-y-[1px] border-y-black/20 py-[0.6rem] uppercase">
+        </span>
+        <span className="mb-[1.2rem] block text-[1rem]">
+          <span className="flex flex-col border-y-[1px] border-y-black/20 py-[0.6rem] uppercase">
             <span className="font-bold text-black/80">Taught By:</span>
-            <span>Ezzat Abdelrazek</span>
-          </div>
-          <div className="flex flex-col border-b-[1px] border-b-black/20 py-[0.6rem] uppercase">
+            <span className="flex items-center gap-[0.4rem]">
+              {instructors.map((instructor, i) => (
+                <span
+                  className="flex items-center gap-[0.4rem]"
+                  key={instructor.name}
+                >
+                  <span>{instructor.name}</span>
+                  {instructors.length - 1 !== i && <span>&</span>}
+                </span>
+              ))}
+            </span>
+          </span>
+          <span className="flex flex-col border-b-[1px] border-b-black/20 py-[0.6rem] uppercase">
             <span className="font-bold text-black/80">Email Address</span>
-            <span>Ezzatabdelrazek@gmail.com</span>
-          </div>
-        </div>
-        <div className="font-mono text-[1rem] uppercase">
+            {instructors.map((instructor) => (
+              <span key={instructor.name}>{instructor.email}</span>
+            ))}
+          </span>
+        </span>
+        <span className="block font-mono text-[1rem] uppercase">
           <p className="mb-[0.4rem]">Key Modules</p>
           <ul className="rounded-xs bg-white/60 p-[0.6rem] leading-[120%]">
-            {keyModules.map((keyModule) => (
-              <li key={keyModule}>{keyModule}</li>
+            {course.keyModules.map((keyModule) => (
+              <li key={keyModule.keyModulesId}>{keyModule.title}</li>
             ))}
           </ul>
-        </div>
-      </div>
-    </article>
+        </span>
+      </span>
+    </Link>
   );
 };
 

@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import React from "react";
+import { cn } from "@/utils";
 
 type CourseSectionProps = {
   children: React.ReactNode;
