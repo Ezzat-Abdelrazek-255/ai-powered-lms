@@ -8,7 +8,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { PlusSvg } from "@/components/ui/icons";
 import PrimaryButton from "@/components/ui/primary-button";
 import { createClient } from "@/libs/supabase/client";
 import { toast } from "react-hot-toast";
