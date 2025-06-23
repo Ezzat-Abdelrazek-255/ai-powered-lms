@@ -13,7 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { logout } from "@/services/auth";
 import LogoutButton from "./logout-button";
 
 type HeaderProps = {
@@ -23,7 +22,7 @@ type HeaderProps = {
 
 const Header = ({ navItems }: HeaderProps) => {
   return (
-    <header className="grid h-[var(--header-height)] grid-rows-[1fr_auto] border-b-[1px] border-b-white/20 bg-white/5 px-[var(--container-px)] pt-[1.6rem] backdrop-blur-sm">
+    <header className="grid grid-rows-[1fr_auto] border-b-[1px] border-b-white/20 bg-white/5 px-[var(--container-px)] pt-[1.6rem] backdrop-blur-sm">
       <div className="mb-6 flex items-center justify-between">
         <Logo />
         <div className="flex items-center gap-2">
@@ -48,8 +47,13 @@ const Header = ({ navItems }: HeaderProps) => {
                 aria-label="Open"
               ></button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuContent
+              className="w-[20rem] px-[1.6rem] py-[1.6rem]"
+              align="end"
+            >
+              <DropdownMenuLabel className="text-[1.6rem]">
+                My Account
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <User />

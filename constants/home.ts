@@ -9,4 +9,8 @@ export const homeNavItems: NavItem[] = [
     label: "Profile",
     href: "/profile",
   },
+  {
+    label: "Chat",
+    href: "/chat",
+  },
 ];

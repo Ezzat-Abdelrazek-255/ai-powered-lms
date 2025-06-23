@@ -11,7 +11,6 @@ import {
 import { PlusSvg } from "@/components/ui/icons";
 import Label from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import PrimaryButton from "@/components/ui/primary-button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { createClient } from "@/libs/supabase/client";
@@ -30,52 +29,72 @@ import { cn } from "@/utils";
 const MAX_OPTIONS_NUM = 4;
 
 type Inputs = {
-  title: string;
-  description: string;
+  question: string;
+  rightAnswer: string;
 };
 
-const CreateQuestion = ({
-  courseId,
-}: {
-  courseId: string;
-  instructorId: string;
-}) => {
+const CreateQuestion = ({ courseId }: { courseId: string }) => {
   const supabase = createClient();
-  const { register, handleSubmit, reset } = useForm<Inputs>();
+  const { register, setValue, handleSubmit, reset } = useForm<Inputs>();
   const [options, setOptions] = useState<{ id: string; text: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    if (options.length === 1) {
-      toast.error("Please add at least two options");
+    if (options.length < 2) {
+      toast.error("Please add at least two options.");
       return;
     }
+
     setIsLoading(true);
 
-    const { title, description } = data;
+    try {
+      const { question, rightAnswer } = data;
 
-    const { error } = await supabase.from("modules").insert({
-      title,
-      description,
-      course_id: courseId,
-    });
+      const { data: questionData, error: questionError } = await supabase
+        .from("question")
+        .insert({
+          question,
+          right_answer: rightAnswer,
+          course_id: courseId,
+        })
+        .select("*")
+        .single();
 
-    setIsLoading(false);
+      if (questionError || !questionData) {
+        console.error("Question insert error:", questionError?.message);
+        toast.error("Failed to create question. Please try again.");
+        return;
+      }
 
-    if (error) {
-      console.error("Error inserting module:", error.message);
-      toast.error("Failed to create module. Please try again.");
-      return;
+      const questionId = questionData.id ?? questionData.question_id;
+
+      const { error: choiceError } = await supabase.from("choice").insert(
+        options.map((option) => ({
+          question_id: questionId,
+          choice: option.text,
+        })),
+      );
+
+      if (choiceError) {
+        console.error("Choice insert error:", choiceError.message);
+        toast.error("Failed to add choices. Please try again.");
+        return;
+      }
+
+      toast.success("Question created successfully!");
+      reset();
+      setOptions([]);
+      setIsOpen(false);
+      router.refresh();
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast.error("Something went wrong.");
+    } finally {
+      setIsLoading(false);
     }
-
-    toast.success("Module created successfully!");
-    setIsOpen(false);
-    reset();
-    router.refresh();
   };
-
   const addOption = function() {
     if (options.length === MAX_OPTIONS_NUM) {
       toast.error("Max number of options is 4");
@@ -108,9 +127,14 @@ const CreateQuestion = ({
     <Dialog open={isOpen} onOpenChange={(state) => setIsOpen(state)}>
       <DialogTrigger
         aria-label="Add Module"
-        className="rounded-xs p-[0.8rem] transition-colors hover:bg-gray-dark-2"
+        className="group rounded-[1.6rem] border border-dashed border-white/50 bg-gray-light/50 text-[2.4rem] font-bold uppercase transition-colors hover:bg-gray-light/80"
       >
-        <PlusSvg className="h-[1.6rem] w-[1.6rem]" />
+        <div className="flex items-center justify-center gap-[1.6rem]">
+          <div className="rounded-full border border-white/50 bg-gray-dark p-[1.6rem] transition-colors group-hover:bg-black">
+            <PlusSvg className="w-[2.4rem] text-white" />
+          </div>
+          <span>Add Question</span>
+        </div>
       </DialogTrigger>
       <DialogContent className="w-[54rem] max-w-none bg-beige p-[4.8rem]">
         <DialogTitle className="sr-only">Create a question</DialogTitle>
@@ -128,6 +152,7 @@ const CreateQuestion = ({
                 required
                 variant="outline"
                 inputSize="sm"
+                {...register("question")}
               />
             </div>
             <div
@@ -172,34 +197,34 @@ const CreateQuestion = ({
                 Add Option
               </PrimaryButton>
             </div>
-            <Select>
-              <SelectTrigger className="h-auto w-full rounded-xs border-0 bg-gray-light px-[0.8rem] py-[1.2rem] font-mono uppercase leading-none">
-                <SelectValue placeholder="Right Option" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xs bg-gray-dark p-[0.8rem] text-white">
-                {options.map((option) => (
-                  <SelectItem
-                    className="hover:bg-gray-lightrounded-xs transition-colors"
-                    key={option.id}
-                    value={option.text}
-                  >
-                    {option.text}
-                  </SelectItem>
-                ))}
-                <SelectItem
-                  className="rounded-xs font-mono uppercase transition-colors hover:bg-gray-light"
-                  value="dark"
+            {options.filter((option) => option.text).length > 1 && (
+              <Select onValueChange={(value) => setValue("rightAnswer", value)}>
+                <SelectTrigger className="h-auto w-full rounded-xs border-0 bg-gray-light px-[1.6rem] py-[1.2rem] font-mono uppercase leading-none">
+                  <SelectValue placeholder="Right Option" />
+                </SelectTrigger>
+                <SelectContent
+                  sideOffset={4}
+                  className="w-full rounded-xs bg-gray-dark p-[0.8rem] text-white"
                 >
-                  Dark
-                </SelectItem>
-                <SelectItem value="system">System</SelectItem>
-              </SelectContent>
-            </Select>
+                  {options
+                    .filter((option) => option.text)
+                    .map((option) => (
+                      <SelectItem
+                        className="w-full cursor-pointer rounded-xs py-[0.8rem] transition-colors hover:bg-gray-light"
+                        key={option.id}
+                        value={option.text || ""}
+                      >
+                        {option.text}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
           <PrimaryButton
             className="w-full bg-blue text-white hover:bg-blue disabled:bg-black"
             isLoading={isLoading}
-            loadingText="Creating module"
+            loadingText="Creating Question"
             type="submit"
           >
             Submit Question

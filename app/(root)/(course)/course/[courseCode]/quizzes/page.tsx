@@ -1,10 +1,14 @@
 import CourseQuizzes from "@/components/pages/course/quizzes/quizzes";
 import React from "react";
 
-const QuizzesPage = () => {
+const QuizzesPage = ({
+  params: { courseCode },
+}: {
+  params: { courseCode: string };
+}) => {
   return (
     <div>
-      <CourseQuizzes />
+      <CourseQuizzes courseId={courseCode} />
     </div>
   );
 };

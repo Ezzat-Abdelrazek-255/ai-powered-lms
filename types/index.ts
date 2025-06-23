@@ -1,14 +1,3 @@
-import { LucideProps } from "lucide-react";
-
-export type LucideIcon = React.ForwardRefExoticComponent<
-  Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
->;
-
-export type AuthInputs = {
-  email: string;
-  password: string;
-};
-
 export type Json =
   | string
   | number
@@ -45,36 +34,74 @@ export type Database = {
   };
   public: {
     Tables: {
-      Assignment: {
+      answer: {
+        Row: {
+          answer: string | null;
+          answer_id: string;
+          attempt_id: string | null;
+          created_at: string;
+          question_id: string | null;
+        };
+        Insert: {
+          answer?: string | null;
+          answer_id?: string;
+          attempt_id?: string | null;
+          created_at?: string;
+          question_id?: string | null;
+        };
+        Update: {
+          answer?: string | null;
+          answer_id?: string;
+          attempt_id?: string | null;
+          created_at?: string;
+          question_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "answer_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "question";
+            referencedColumns: ["question_id"];
+          },
+        ];
+      };
+      assignment: {
         Row: {
           assignment_id: string;
           course_id: string;
           created_at: string;
           description: string;
-          due_date: string;
+          due_date: string | null;
+          file_url: string | null;
           max_grade: number | null;
-          resource_url: string | null;
+          module_id: string | null;
           title: string;
+          user_id: string | null;
         };
         Insert: {
           assignment_id?: string;
           course_id?: string;
           created_at?: string;
           description: string;
-          due_date: string;
+          due_date?: string | null;
+          file_url?: string | null;
           max_grade?: number | null;
-          resource_url?: string | null;
+          module_id?: string | null;
           title: string;
+          user_id?: string | null;
         };
         Update: {
           assignment_id?: string;
           course_id?: string;
           created_at?: string;
           description?: string;
-          due_date?: string;
+          due_date?: string | null;
+          file_url?: string | null;
           max_grade?: number | null;
-          resource_url?: string | null;
+          module_id?: string | null;
           title?: string;
+          user_id?: string | null;
         };
         Relationships: [
           {
@@ -84,9 +111,55 @@ export type Database = {
             referencedRelation: "course";
             referencedColumns: ["course_id"];
           },
+          {
+            foreignKeyName: "assignment_module_id_fkey";
+            columns: ["module_id"];
+            isOneToOne: false;
+            referencedRelation: "modules";
+            referencedColumns: ["module_id"];
+          },
         ];
       };
-      Choice: {
+      attempt: {
+        Row: {
+          attempt_id: string;
+          created_at: string;
+          expires_at: string | null;
+          quiz_id: string | null;
+          student_id: string | null;
+        };
+        Insert: {
+          attempt_id?: string;
+          created_at?: string;
+          expires_at?: string | null;
+          quiz_id?: string | null;
+          student_id?: string | null;
+        };
+        Update: {
+          attempt_id?: string;
+          created_at?: string;
+          expires_at?: string | null;
+          quiz_id?: string | null;
+          student_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "attempt_quiz_id_fkey";
+            columns: ["quiz_id"];
+            isOneToOne: false;
+            referencedRelation: "quiz";
+            referencedColumns: ["quiz_id"];
+          },
+          {
+            foreignKeyName: "attempt_student_id_fkey";
+            columns: ["student_id"];
+            isOneToOne: false;
+            referencedRelation: "student";
+            referencedColumns: ["user_id"];
+          },
+        ];
+      };
+      choice: {
         Row: {
           choice: string;
           choice_id: string;
@@ -97,7 +170,7 @@ export type Database = {
           choice: string;
           choice_id?: string;
           created_at?: string;
-          question_id: string;
+          question_id?: string;
         };
         Update: {
           choice?: string;
@@ -105,26 +178,40 @@ export type Database = {
           created_at?: string;
           question_id?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "choice_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "question";
+            referencedColumns: ["question_id"];
+          },
+        ];
       };
-      Content: {
+      content: {
         Row: {
           content_id: string;
           course_id: string;
           created_at: string;
-          file_url: string | null;
+          file_name: string | null;
+          file_url: string;
+          module_id: string;
         };
         Insert: {
           content_id?: string;
           course_id?: string;
           created_at?: string;
-          file_url?: string | null;
+          file_name?: string | null;
+          file_url: string;
+          module_id: string;
         };
         Update: {
           content_id?: string;
           course_id?: string;
           created_at?: string;
-          file_url?: string | null;
+          file_name?: string | null;
+          file_url?: string;
+          module_id?: string;
         };
         Relationships: [
           {
@@ -133,6 +220,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "course";
             referencedColumns: ["course_id"];
+          },
+          {
+            foreignKeyName: "content_module_id_fkey";
+            columns: ["module_id"];
+            isOneToOne: false;
+            referencedRelation: "modules";
+            referencedColumns: ["module_id"];
           },
         ];
       };
@@ -169,72 +263,99 @@ export type Database = {
         };
         Relationships: [];
       };
-      Course_Instructor: {
+      course_instructor: {
         Row: {
-          academic_year: string | null;
           course_id: string;
           created_at: string;
           instructor_id: string;
-          semester: string;
         };
         Insert: {
-          academic_year?: string | null;
-          course_id: string;
-          created_at?: string;
-          instructor_id: string;
-          semester: string;
-        };
-        Update: {
-          academic_year?: string | null;
           course_id?: string;
           created_at?: string;
           instructor_id?: string;
-          semester?: string;
         };
-        Relationships: [];
+        Update: {
+          course_id?: string;
+          created_at?: string;
+          instructor_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "course_instructor_course_id_fkey";
+            columns: ["course_id"];
+            isOneToOne: false;
+            referencedRelation: "course";
+            referencedColumns: ["course_id"];
+          },
+          {
+            foreignKeyName: "course_instructor_instructor_id_fkey";
+            columns: ["instructor_id"];
+            isOneToOne: false;
+            referencedRelation: "instructor";
+            referencedColumns: ["user_id"];
+          },
+        ];
       };
-      Course_Student: {
+      course_student: {
         Row: {
-          academic_year: string | null;
           course_id: string;
           created_at: string;
-          semester: string;
           student_id: string;
         };
         Insert: {
-          academic_year?: string | null;
           course_id?: string;
           created_at?: string;
-          semester: string;
           student_id?: string;
         };
         Update: {
-          academic_year?: string | null;
           course_id?: string;
           created_at?: string;
-          semester?: string;
           student_id?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "course_student_course_id_fkey";
+            columns: ["course_id"];
+            isOneToOne: false;
+            referencedRelation: "course";
+            referencedColumns: ["course_id"];
+          },
+          {
+            foreignKeyName: "course_student_student_id_fkey";
+            columns: ["student_id"];
+            isOneToOne: false;
+            referencedRelation: "student";
+            referencedColumns: ["user_id"];
+          },
+        ];
       };
-      Instructor: {
+      instructor: {
         Row: {
           birthdate: string;
           created_at: string;
           department: string;
-          instructor_id: string;
+          email: string | null;
+          name: string | null;
+          role: string | null;
+          user_id: string;
         };
         Insert: {
           birthdate: string;
           created_at?: string;
           department: string;
-          instructor_id?: string;
+          email?: string | null;
+          name?: string | null;
+          role?: string | null;
+          user_id?: string;
         };
         Update: {
           birthdate?: string;
           created_at?: string;
           department?: string;
-          instructor_id?: string;
+          email?: string | null;
+          name?: string | null;
+          role?: string | null;
+          user_id?: string;
         };
         Relationships: [];
       };
@@ -267,171 +388,290 @@ export type Database = {
           },
         ];
       };
-      Modules: {
+      modules: {
         Row: {
-          content_id: string;
           course_id: string;
           created_at: string;
-          key_modules_id: string;
+          description: string | null;
+          instructor_id: string | null;
+          module_id: string;
+          title: string | null;
         };
         Insert: {
-          content_id?: string;
           course_id?: string;
           created_at?: string;
-          key_modules_id?: string;
+          description?: string | null;
+          instructor_id?: string | null;
+          module_id?: string;
+          title?: string | null;
         };
         Update: {
-          content_id?: string;
           course_id?: string;
           created_at?: string;
-          key_modules_id?: string;
+          description?: string | null;
+          instructor_id?: string | null;
+          module_id?: string;
+          title?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "modules_course_id_fkey";
+            columns: ["course_id"];
+            isOneToOne: false;
+            referencedRelation: "course";
+            referencedColumns: ["course_id"];
+          },
+          {
+            foreignKeyName: "modules_instructor_id_fkey";
+            columns: ["instructor_id"];
+            isOneToOne: false;
+            referencedRelation: "instructor";
+            referencedColumns: ["user_id"];
+          },
+        ];
       };
-      Question: {
+      question: {
         Row: {
+          course_id: string | null;
           created_at: string;
           question: string;
           question_id: string;
-          quiz_id: string;
           right_answer: string;
         };
         Insert: {
+          course_id?: string | null;
           created_at?: string;
           question: string;
           question_id?: string;
-          quiz_id: string;
           right_answer: string;
         };
         Update: {
+          course_id?: string | null;
           created_at?: string;
           question?: string;
           question_id?: string;
-          quiz_id?: string;
           right_answer?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "question_course_id_fkey";
+            columns: ["course_id"];
+            isOneToOne: false;
+            referencedRelation: "course";
+            referencedColumns: ["course_id"];
+          },
+        ];
       };
-      Quiz: {
+      quiz: {
         Row: {
+          available_date: string;
+          close_date: string;
           course_id: string;
           created_at: string;
           description: string;
-          end_date: string;
-          instructor_id: string;
+          max_grade: number | null;
+          module_id: string | null;
           quiz_id: string;
-          start_date: string;
           time_limit: number;
           title: string;
         };
         Insert: {
-          course_id: string;
+          available_date: string;
+          close_date: string;
+          course_id?: string;
           created_at?: string;
           description: string;
-          end_date: string;
-          instructor_id: string;
+          max_grade?: number | null;
+          module_id?: string | null;
           quiz_id?: string;
-          start_date: string;
           time_limit: number;
           title: string;
         };
         Update: {
+          available_date?: string;
+          close_date?: string;
           course_id?: string;
           created_at?: string;
           description?: string;
-          end_date?: string;
-          instructor_id?: string;
+          max_grade?: number | null;
+          module_id?: string | null;
           quiz_id?: string;
-          start_date?: string;
           time_limit?: number;
           title?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "quiz_course_id_fkey";
+            columns: ["course_id"];
+            isOneToOne: false;
+            referencedRelation: "course";
+            referencedColumns: ["course_id"];
+          },
+          {
+            foreignKeyName: "quiz_module_id_fkey";
+            columns: ["module_id"];
+            isOneToOne: false;
+            referencedRelation: "modules";
+            referencedColumns: ["module_id"];
+          },
+        ];
+      };
+      quiz_question: {
+        Row: {
+          created_at: string;
+          question_id: string;
+          question_order: number | null;
+          quiz_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          question_id?: string;
+          question_order?: number | null;
+          quiz_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          question_id?: string;
+          question_order?: number | null;
+          quiz_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "quiz_question_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "question";
+            referencedColumns: ["question_id"];
+          },
+          {
+            foreignKeyName: "quiz_question_quiz_id_fkey";
+            columns: ["quiz_id"];
+            isOneToOne: false;
+            referencedRelation: "quiz";
+            referencedColumns: ["quiz_id"];
+          },
+        ];
+      };
+      role_permissions: {
+        Row: {
+          id: number;
+          permission: Database["public"]["Enums"]["app_permission"];
+          role: Database["public"]["Enums"]["app_role"];
+        };
+        Insert: {
+          id?: number;
+          permission: Database["public"]["Enums"]["app_permission"];
+          role: Database["public"]["Enums"]["app_role"];
+        };
+        Update: {
+          id?: number;
+          permission?: Database["public"]["Enums"]["app_permission"];
+          role?: Database["public"]["Enums"]["app_role"];
+        };
         Relationships: [];
       };
-      Student: {
+      student: {
         Row: {
           birthdate: string;
           created_at: string;
-          GPA: number;
+          email: string | null;
+          gpa: number;
           level: string;
           major: string;
-          student_id: string;
+          name: string | null;
+          profile_image_url: string | null;
+          user_id: string;
         };
         Insert: {
           birthdate: string;
           created_at?: string;
-          GPA: number;
+          email?: string | null;
+          gpa: number;
           level?: string;
           major: string;
-          student_id?: string;
+          name?: string | null;
+          profile_image_url?: string | null;
+          user_id?: string;
         };
         Update: {
           birthdate?: string;
           created_at?: string;
-          GPA?: number;
+          email?: string | null;
+          gpa?: number;
           level?: string;
           major?: string;
-          student_id?: string;
+          name?: string | null;
+          profile_image_url?: string | null;
+          user_id?: string;
         };
         Relationships: [];
       };
-      Student_Quiz_Attempt: {
-        Row: {
-          attempt_id: string;
-          duration: number;
-          end_date: string;
-          quiz_id: string;
-          score: number;
-          start_date: string;
-          student_id: string;
-        };
-        Insert: {
-          attempt_id?: string;
-          duration: number;
-          end_date?: string;
-          quiz_id: string;
-          score: number;
-          start_date: string;
-          student_id: string;
-        };
-        Update: {
-          attempt_id?: string;
-          duration?: number;
-          end_date?: string;
-          quiz_id?: string;
-          score?: number;
-          start_date?: string;
-          student_id?: string;
-        };
-        Relationships: [];
-      };
-      Submission: {
+      submission: {
         Row: {
           assignment_id: string;
+          file_name: string | null;
           file_url: string;
           grade: number | null;
           instructor_feedback: string | null;
           student_id: string;
           submission_date: string;
           submission_id: string;
+          submission_status: string | null;
         };
         Insert: {
-          assignment_id: string;
+          assignment_id?: string;
+          file_name?: string | null;
           file_url: string;
           grade?: number | null;
           instructor_feedback?: string | null;
-          student_id: string;
+          student_id?: string;
           submission_date?: string;
           submission_id?: string;
+          submission_status?: string | null;
         };
         Update: {
           assignment_id?: string;
+          file_name?: string | null;
           file_url?: string;
           grade?: number | null;
           instructor_feedback?: string | null;
           student_id?: string;
           submission_date?: string;
           submission_id?: string;
+          submission_status?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "submission_assignment_id_fkey";
+            columns: ["assignment_id"];
+            isOneToOne: false;
+            referencedRelation: "assignment";
+            referencedColumns: ["assignment_id"];
+          },
+          {
+            foreignKeyName: "submission_student_id_fkey";
+            columns: ["student_id"];
+            isOneToOne: false;
+            referencedRelation: "student";
+            referencedColumns: ["user_id"];
+          },
+        ];
+      };
+      user_roles: {
+        Row: {
+          id: number;
+          role: Database["public"]["Enums"]["app_role"];
+          user_id: string;
+        };
+        Insert: {
+          id?: number;
+          role: Database["public"]["Enums"]["app_role"];
+          user_id: string;
+        };
+        Update: {
+          id?: number;
+          role?: Database["public"]["Enums"]["app_role"];
+          user_id?: string;
         };
         Relationships: [];
       };
@@ -440,10 +680,65 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      authorize: {
+        Args: {
+          requested_permission: Database["public"]["Enums"]["app_permission"];
+        };
+        Returns: boolean;
+      };
+      create_attempt_with_expiry: {
+        Args: { p_student_id: string; p_quiz_id: string };
+        Returns: {
+          attempt_id: string;
+          student_id: string;
+          quiz_id: string;
+          expires_at: string;
+          created_at: string;
+          updated_at: string;
+        }[];
+      };
+      custom_access_token_hook: {
+        Args: { event: Json };
+        Returns: Json;
+      };
     };
     Enums: {
-      [_ in never]: never;
+      app_permission:
+      | "course.create"
+      | "course.read"
+      | "course.update"
+      | "course.delete"
+      | "module.create"
+      | "module.read"
+      | "module.update"
+      | "module.delete"
+      | "assignment.create"
+      | "assignment.read"
+      | "assignment.update"
+      | "assignment.delete"
+      | "question.create"
+      | "question.read"
+      | "question.update"
+      | "question.delete"
+      | "choice.create"
+      | "choice.read"
+      | "choice.update"
+      | "choice.delete"
+      | "submission.create"
+      | "submission.read"
+      | "content.create"
+      | "content.read"
+      | "content.update"
+      | "content.delete"
+      | "quiz.create"
+      | "quiz.read"
+      | "quiz.update"
+      | "quiz.delete"
+      | "attempt.create"
+      | "attempt.read"
+      | "attempt.update"
+      | "attempt.delete";
+      app_role: "instructor" | "student";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -561,6 +856,44 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      app_permission: [
+        "course.create",
+        "course.read",
+        "course.update",
+        "course.delete",
+        "module.create",
+        "module.read",
+        "module.update",
+        "module.delete",
+        "assignment.create",
+        "assignment.read",
+        "assignment.update",
+        "assignment.delete",
+        "question.create",
+        "question.read",
+        "question.update",
+        "question.delete",
+        "choice.create",
+        "choice.read",
+        "choice.update",
+        "choice.delete",
+        "submission.create",
+        "submission.read",
+        "content.create",
+        "content.read",
+        "content.update",
+        "content.delete",
+        "quiz.create",
+        "quiz.read",
+        "quiz.update",
+        "quiz.delete",
+        "attempt.create",
+        "attempt.read",
+        "attempt.update",
+        "attempt.delete",
+      ],
+      app_role: ["instructor", "student"],
+    },
   },
 } as const;

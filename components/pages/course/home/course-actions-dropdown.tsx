@@ -16,6 +16,7 @@ import {
 import UploadContent from "./upload-content";
 import CreateAssignment from "./create-assignment";
 import { Dialog } from "@/components/ui/dialog";
+import CreateQuiz from "../quizzes/create-quiz";
 const dropdownMenuItems = [
   {
     label: "Upload content",
@@ -74,6 +75,22 @@ export default function CourseActions({
               <div className="flex items-center gap-[0.8rem]">
                 <AbstractSvg className="h-4 w-4 text-white" />
                 Create Assignment
+              </div>
+            </DropdownMenuItem>
+          }
+        />
+
+        <CreateQuiz
+          courseId={courseId}
+          moduleId={moduleId}
+          dropdownMenuItem={
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="cursor-pointer rounded-xs p-[0.8rem] px-[1.2rem] text-[1.6rem] transition-colors hover:!bg-gray-light hover:!text-white focus:bg-gray-light"
+            >
+              <div className="flex items-center gap-[0.8rem]">
+                <AbstractSvg className="h-4 w-4 text-white" />
+                Create Quiz
               </div>
             </DropdownMenuItem>
           }

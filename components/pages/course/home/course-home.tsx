@@ -54,6 +54,20 @@ const CourseHome = async ({ course }: { course: Course }) => {
                   </Link>
                 </li>
               ))}
+              {module.quiz?.map((quiz) => (
+                <li
+                  key={quiz.quizId}
+                  className="flex items-center gap-[0.8rem] border-b-black/20 pb-[0.8rem] [&:not(:last-child)]:border-b-[1px]"
+                >
+                  <AbstractSvg className="h-[1.4rem] w-[1.4rem] fill-black" />
+                  <Link
+                    className="hover:underline"
+                    href={`/course/${course.courseId}/quizzes/${quiz.quizId}`}
+                  >
+                    {quiz.title}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </CourseHomeAccordion>
         ))}

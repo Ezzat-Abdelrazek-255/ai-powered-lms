@@ -2,8 +2,13 @@ import React from "react";
 import CourseSectionTitle from "../ui/course-section-title";
 import SubmissionCard from "../ui/submission-card";
 import CourseSection from "../ui/course-section";
+import { getQuizzes } from "@/services/course";
+import { createClient } from "@/libs/supabase/server";
 
-const CourseQuizzes = () => {
+const CourseQuizzes = async ({ courseId }: { courseId: string }) => {
+  const supabase = await createClient();
+  const quizzes = await getQuizzes(supabase, courseId);
+
   return (
     <CourseSection>
       <div className="mb-[8rem] border-b-[1px] border-b-white/20">
@@ -15,9 +20,9 @@ const CourseQuizzes = () => {
         </div>
       </div>
       <ul className="mx-auto flex w-full max-w-[var(--container-max-width)] flex-col gap-4">
-        {[...new Array(8)].map((_, i) => (
-          <li key={i}>
-            <SubmissionCard variant="quiz" />
+        {quizzes?.map((quiz) => (
+          <li key={quiz.quizId}>
+            <SubmissionCard courseId={courseId} quiz={quiz} variant="quiz" />
           </li>
         ))}
       </ul>

@@ -1,12 +1,138 @@
 import {
   Assignment,
+  Choice,
   Course,
   Module,
+  Question,
+  Quiz,
   Student,
   Submission,
 } from "@/types/courses";
 import { camelObject, getUserMetadata } from "@/utils";
 import { SupabaseClient } from "@supabase/supabase-js";
+
+export async function getQuiz(
+  supabase: SupabaseClient,
+  quizId: string,
+): Promise<Quiz | undefined> {
+  try {
+    const { data, error } = await supabase
+      .from("quiz")
+      .select(
+        `
+        *,
+        quiz_question(
+          question_order,
+          question(
+            question_id,
+            question,
+            choice(*)
+          )
+        )
+      `,
+      )
+      .eq("quiz_id", quizId)
+      .order("question_order", { foreignTable: "quiz_question" })
+      .single();
+
+    if (error) throw error;
+    return camelObject<Quiz>(data);
+  } catch (error) {
+    throw error;
+  }
+}
+export async function getQuizzes(
+  supabase: SupabaseClient,
+  courseId: string,
+): Promise<Quiz[] | undefined> {
+  try {
+    const { data, error } = await supabase
+      .from(`quiz`)
+      .select("*, attempt(*)")
+      .eq(`course_id`, courseId);
+
+    if (error) throw error;
+
+    return camelObject<Quiz[]>(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function createQuiz(
+  supabase: SupabaseClient,
+  quiz: {
+    course_id: string;
+    module_id: string;
+    title: string;
+    description: string;
+    available_date: Date;
+    close_date: Date;
+    time_limit: number;
+    max_grade: number;
+    questions: Array<{
+      label: string;
+      value: string;
+      choices: Choice[];
+      id: string;
+    }>;
+  },
+) {
+  try {
+    // First, create the quiz
+    const { data: quizData, error: quizError } = await supabase
+      .from("quiz")
+      .insert({
+        course_id: quiz.course_id,
+        module_id: quiz.module_id,
+        title: quiz.title,
+        description: quiz.description,
+        available_date: quiz.available_date,
+        close_date: quiz.close_date,
+        time_limit: quiz.time_limit,
+        max_grade: quiz.max_grade,
+      })
+      .select()
+      .single();
+
+    if (quizError) throw quizError;
+
+    // Then, create the quiz-question relationships
+    if (quiz.questions.length > 0) {
+      const quizQuestions = quiz.questions.map((question, index) => ({
+        quiz_id: quizData.quiz_id,
+        question_id: question.id,
+        question_order: index + 1,
+      }));
+
+      const { error: questionsError } = await supabase
+        .from("quiz_question")
+        .insert(quizQuestions);
+
+      if (questionsError) throw questionsError;
+    }
+
+    return quizData;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getQuestions(
+  supabase: SupabaseClient,
+  courseId: string,
+): Promise<Question[]> {
+  try {
+    const { data, error } = await supabase
+      .from("question")
+      .select("*, choice(*)")
+      .eq("course_id", courseId);
+    if (error) throw error;
+    return camelObject(data) as Question[];
+  } catch (error) {
+    throw error;
+  }
+}
 
 export async function getCourse(
   supabase: SupabaseClient,
@@ -150,7 +276,7 @@ export async function getCourseModules(
   try {
     const { data, error } = await supabase
       .from(`modules`)
-      .select("*,content(*),assignment(*)")
+      .select("*,content(*),assignment(*),quiz(*)")
       .eq("course_id", courseId);
 
     if (error) throw error;

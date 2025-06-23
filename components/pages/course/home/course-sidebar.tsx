@@ -18,6 +18,8 @@ async function CourseSidebar({ course }: { course: Course }) {
   const supabase = await createClient();
   const { role, id } = await getUserMetadata(supabase);
   const modules = await getCourseModules(supabase, course.courseId);
+  const assignments = modules.flatMap((module) => module.assignment);
+  const quizzes = modules.flatMap((module) => module.quiz);
 
   return (
     <div className="h-full border-r-[1px] border-r-white/20 bg-gray-dark p-[2.4rem]">
@@ -69,11 +71,75 @@ async function CourseSidebar({ course }: { course: Course }) {
                     </Link>
                   </li>
                 ))}
+                {module.quiz.map((item) => (
+                  <li key={item.quizId}>
+                    <Link
+                      href={`/course/${course.courseId}/quizzes/${item.quizId}`}
+                      className="flex items-center gap-2 hover:underline"
+                    >
+                      <AbstractSvg className="w-6" />
+                      {item.title}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
       ))}
+      <Accordion
+        key="assignments"
+        type="single"
+        collapsible
+        className="rounded-xs"
+      >
+        <AccordionItem value="assignments" className="border-none">
+          <div className="flex items-center justify-between rounded-sm p-[1.6rem] transition-colors hover:bg-gray-light">
+            <AccordionTrigger className="flex flex-row-reverse justify-end gap-[1.2rem] p-0 text-[1.6rem] leading-[85%] [&>div]:border-0 [&[data-state=open]_svg]:rotate-[135deg] [&_svg]:h-[1.6rem] [&_svg]:w-[1.6rem] [&_svg]:rotate-45 [&_svg]:fill-white">
+              Assignments
+            </AccordionTrigger>
+          </div>
+          <AccordionContent className="px-[3.2rem] py-[0.8rem]">
+            <ul className="flex flex-col gap-[1.6rem] border-l-[1px] border-l-white/40 pl-[1.6rem] text-[1.4rem] text-white/80">
+              {assignments.map((assignment) => (
+                <li key={assignment.assignmentId}>
+                  <Link
+                    href={`/course/${course.courseId}/assignments/${assignment.assignmentId}`}
+                    className="flex items-center gap-2 hover:underline"
+                  >
+                    <AbstractSvg className="w-6" />
+                    {assignment.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+      <Accordion key="quizzes" type="single" collapsible className="rounded-xs">
+        <AccordionItem value="quizzes" className="border-none">
+          <div className="flex items-center justify-between rounded-sm p-[1.6rem] transition-colors hover:bg-gray-light">
+            <AccordionTrigger className="flex flex-row-reverse justify-end gap-[1.2rem] p-0 text-[1.6rem] leading-[85%] [&>div]:border-0 [&[data-state=open]_svg]:rotate-[135deg] [&_svg]:h-[1.6rem] [&_svg]:w-[1.6rem] [&_svg]:rotate-45 [&_svg]:fill-white">
+              Quizzes
+            </AccordionTrigger>
+          </div>
+          <AccordionContent className="px-[3.2rem] py-[0.8rem]">
+            <ul className="flex flex-col gap-[1.6rem] border-l-[1px] border-l-white/40 pl-[1.6rem] text-[1.4rem] text-white/80">
+              {quizzes.map((quiz) => (
+                <li key={quiz.quizId}>
+                  <Link
+                    href={`/course/${course.courseId}/quizzes/${quiz.quizId}`}
+                    className="flex items-center gap-2 hover:underline"
+                  >
+                    <AbstractSvg className="w-6" />
+                    {quiz.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
   // return (

@@ -27,6 +27,7 @@ type Inputs = {
   title: string;
   maxGrade?: number;
   dueDate: Date;
+  dueTime: string;
   description?: string;
 };
 
@@ -39,7 +40,9 @@ const CreateAssignment = ({
   moduleId: string;
   dropdownMenuItem?: React.ReactNode;
 }) => {
-  const { handleSubmit, register, watch, setValue, reset } = useForm<Inputs>();
+  const { handleSubmit, register, watch, setValue, reset } = useForm<Inputs>({
+    defaultValues: { dueTime: "10:30:00" },
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>("idle");
   const [uploadedFiles, setUploadedFiles] = useState<
@@ -52,10 +55,16 @@ const CreateAssignment = ({
 
   const title = watch("title");
   const dueDate = watch("dueDate");
+  const dueTime = watch("dueTime");
 
   const onSubmit = async (data: Inputs) => {
     try {
       setIsLoading(true);
+      // combine date and time into single Date object
+      const [hours, minutes, seconds] = data.dueTime.split(":").map(Number);
+      const combined = new Date(data.dueDate);
+      combined.setHours(hours, minutes, seconds || 0, 0);
+
       await createAssignment(supabase, {
         course_id: courseId,
         module_id: moduleId,
@@ -63,14 +72,14 @@ const CreateAssignment = ({
         description: data.description || "",
         file_url: uploadedFiles[0].ufsUrl,
         max_grade: data.maxGrade || 0,
-        due_date: dueDate,
+        due_date: combined,
       });
       toast.success("Assignment Created Successfully!");
       setIsOpen(false);
       reset();
       router.refresh();
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Failed to create assignment. Please try again");
     } finally {
       setIsLoading(false);
@@ -88,13 +97,14 @@ const CreateAssignment = ({
         </DialogTrigger>
       )}
       <DialogContent className="w-[54rem] max-w-none bg-beige p-[4.8rem]">
-        <DialogTitle className="sr-only">Create Assignmet</DialogTitle>
+        <DialogTitle className="sr-only">Create Assignment</DialogTitle>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-[2.4rem]">
             <h2 className="h4 mb-[3.2rem] text-center uppercase text-black">
               Create Assignment
             </h2>
             <div className="grid grid-cols-2 gap-x-[1.6rem]">
+              {/* Title and Max Grade */}
               <div className="space-y-[0.4rem]">
                 <Label htmlFor="title">Assignment title</Label>
                 <Input
@@ -103,40 +113,52 @@ const CreateAssignment = ({
                   inputSize="sm"
                   variant="outline"
                   placeholder="e.g. Assignment 1"
-                  {...register("title")}
+                  {...register("title", { required: true })}
                   className="mb-4 w-full"
                 />
               </div>
               <div className="space-y-[0.4rem]">
-                <Label required={false} htmlFor="maxGrade">
-                  Max grade
-                </Label>
+                <Label htmlFor="maxGrade">Max grade</Label>
                 <Input
                   id="maxGrade"
                   type="number"
                   inputSize="sm"
                   variant="outline"
                   placeholder="Max Grade"
-                  {...register("maxGrade")}
+                  {...register("maxGrade", { valueAsNumber: true })}
                   className="mb-4 w-full"
                 />
               </div>
             </div>
-            <DateInput
-              value={dueDate}
-              onChange={(date) => {
-                setValue("dueDate", new Date(date!), { shouldValidate: true });
-              }}
-              label="Due Date"
-              placeholder="Select end date"
-            />
+            <div className="grid grid-cols-2 gap-x-[1.6rem]">
+              {/* Date and Time */}
+              <DateInput
+                value={dueDate}
+                onChange={(date) => {
+                  setValue("dueDate", new Date(date!), {
+                    shouldValidate: true,
+                  });
+                }}
+                label="Due Date"
+                placeholder="Select end date"
+              />
+              <div className="space-y-[0.4rem]">
+                <Label htmlFor="dueTime">Due Time</Label>
+                <Input
+                  id="dueTime"
+                  type="time"
+                  step="1"
+                  {...register("dueTime")}
+                  className="py-[2rem] text-black/60"
+                  variant="outline"
+                />
+              </div>
+            </div>
             <div className="space-y-[0.8rem]">
-              <Label required={false} htmlFor="description">
-                Assignment description
-              </Label>
+              <Label htmlFor="description">Assignment description</Label>
               <Textarea
                 id="description"
-                placeholder="e.g. This assignment explores Digital Literacy and its importance for teachers and students..."
+                placeholder="e.g. This assignment explores Digital Literacy..."
                 {...register("description")}
               />
             </div>
@@ -170,8 +192,8 @@ const CreateAssignment = ({
         </form>
 
         <DialogDescription className="sr-only">
-          A form that enables instructors to create Assignmets to modules within
-          a course.
+          A form that enables instructors to create Assignments to modules
+          within a course.
         </DialogDescription>
       </DialogContent>
     </Dialog>
