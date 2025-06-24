@@ -12,11 +12,19 @@ import React, {
   FormEvent,
 } from "react";
 
+interface QuizQuestion {
+  number: number;
+  question: string;
+  type: "Multiple Choice" | "True False" | "Short Answer" | "Essay";
+  options: string[];
+}
+
 interface Message {
   role: "user" | "assistant";
   content: string;
   fileName?: string;
   title?: string;
+  quizQuestions?: QuizQuestion[];
 }
 
 const ChatPage: React.FC = () => {
@@ -27,12 +35,10 @@ const ChatPage: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Scroll to bottom when new message arrives
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Auto-expand textarea height
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputText(e.target.value);
     if (textareaRef.current) {
@@ -49,13 +55,11 @@ const ChatPage: React.FC = () => {
     e.preventDefault();
     if (!inputText.trim() && !file) return;
 
-    // Add user message
     setMessages((prev) => [
       ...prev,
       { role: "user", content: inputText.trim(), fileName: file?.name },
     ]);
 
-    // Prepare form data
     const formData = new FormData();
     formData.append("text", inputText.trim());
     if (file) formData.append("file", file);
@@ -77,7 +81,22 @@ const ChatPage: React.FC = () => {
         const data = await response.json();
         console.log("✅ JSON Response:", data);
 
-        if (Array.isArray(data.response)) {
+        // Check for quiz-style nested format
+        const quizItems =
+          data?.response?.[0]?.paragraphs?.[0]?.response?.[0]?.paragraphs;
+        const isQuizFormat = Array.isArray(quizItems) && quizItems[0]?.question;
+
+        if (isQuizFormat) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: "Here are your generated quiz questions:",
+              title: "Quiz",
+              quizQuestions: quizItems,
+            },
+          ]);
+        } else if (Array.isArray(data.response)) {
           data.response.forEach(
             (item: { title: string; paragraphs: string[] }) =>
               setMessages((prev) => [
@@ -93,7 +112,7 @@ const ChatPage: React.FC = () => {
           window.open(`http://127.0.0.1:5000${data.download_url}`, "_blank");
         }
       } else {
-        // It's a file (PDF, PPTX, etc.)
+        // Handle file blob (PDF, PPTX, etc.)
         const blob = await response.blob();
         const fileURL = URL.createObjectURL(blob);
 
@@ -112,7 +131,6 @@ const ChatPage: React.FC = () => {
         document.body.appendChild(a);
         a.click();
         a.remove();
-
         URL.revokeObjectURL(fileURL);
 
         setMessages((prev) => [
@@ -146,7 +164,6 @@ const ChatPage: React.FC = () => {
         messages.length > 0 && "justify-between",
       )}
     >
-      {/* Chat window */}
       {messages.length > 0 && (
         <div className="mx-auto flex w-1/2 flex-1 flex-col space-y-8 overflow-auto py-[4rem]">
           {messages.map((msg, idx) => (
@@ -164,8 +181,34 @@ const ChatPage: React.FC = () => {
                     {msg.title}
                   </h2>
                 )}
-                <p className="leading-[150%]">{msg.content}</p>
+
+                {msg.quizQuestions ? (
+                  <ul className="space-y-4 text-[1.6rem]">
+                    {msg.quizQuestions
+                      .filter((q) => q.question)
+                      .map((q, i) => (
+                        <li key={q.number}>
+                          <p className="font-semibold">
+                            {i + 1}. {q.question}{" "}
+                            <span className="text-sm italic text-white/50">
+                              ({q.type})
+                            </span>
+                          </p>
+                          {q.options.length > 0 && (
+                            <ul className="ml-4 mt-2 list-disc space-y-1">
+                              {q.options.map((opt, i) => (
+                                <li key={i}>{opt}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                  </ul>
+                ) : (
+                  <p className="text-[1.6rem] leading-[150%]">{msg.content}</p>
+                )}
               </div>
+
               {msg.fileName && (
                 <div className="mt-2 text-sm italic">
                   Attached file: {msg.fileName}
@@ -177,7 +220,6 @@ const ChatPage: React.FC = () => {
         </div>
       )}
 
-      {/* Input area */}
       <form
         onSubmit={handleSubmit}
         className={cn(
