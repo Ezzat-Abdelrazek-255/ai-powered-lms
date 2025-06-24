@@ -63,7 +63,7 @@ const CreateQuiz = ({
   const router = useRouter();
 
   useEffect(() => {
-    const fetchQuestions = async function() {
+    const fetchQuestions = async function () {
       const questions = await getQuestions(supabase, courseId);
       const options = questions.map((question) => ({
         label: question.question,
@@ -205,171 +205,173 @@ const CreateQuiz = ({
           Create Quiz
         </DialogTrigger>
       )}
-      <DialogContent className="w-[54rem] max-w-none bg-beige p-[4.8rem]">
-        <DialogTitle className="sr-only">Create Quiz</DialogTitle>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-[2.4rem] space-y-[2.4rem]">
-            <h2 className="h4 mb-[3.2rem] text-center uppercase text-black">
-              Create Quiz
-            </h2>
-            <div className="space-y-[0.4rem]">
-              <Label htmlFor="title">Quiz Title</Label>
-              <Input
-                id="title"
-                type="text"
-                inputSize="sm"
-                variant="outline"
-                placeholder="e.g. Quiz 1"
-                {...register("title", { required: true })}
-                className="w-full"
-              />
-            </div>
-            <div className="space-y-[0.4rem]">
-              <Label htmlFor="description" required={false}>
-                Quiz description
-              </Label>
-              <Textarea
-                id="description"
-                placeholder="e.g. This quiz covers Digital Literacy concepts..."
-                {...register("description")}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-x-[1.6rem]">
-              {/* Available Date and Time */}
-              <DateInput
-                value={availableDate}
-                onChange={(date) => {
-                  setValue("availableDate", new Date(date!), {
-                    shouldValidate: true,
-                  });
-                }}
-                label="Available on"
-                placeholder="Select available date"
-              />
+      <DialogContent className="w-[54rem] max-w-none bg-beige">
+        <ScrollArea className="h-[50vh] p-[4.8rem]">
+          <DialogTitle className="sr-only">Create Quiz</DialogTitle>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-[2.4rem] space-y-[2.4rem]">
+              <h2 className="h4 mb-[3.2rem] text-center uppercase text-black">
+                Create Quiz
+              </h2>
               <div className="space-y-[0.4rem]">
-                <Label htmlFor="availableTime">Available at</Label>
+                <Label htmlFor="title">Quiz Title</Label>
                 <Input
-                  id="availableTime"
-                  type="time"
-                  step="1"
-                  {...register("availableTime", { required: true })}
-                  className="py-[2rem] text-black/60"
-                  variant="outline"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-x-[1.6rem]">
-              {/* Close Date and Time */}
-              <DateInput
-                value={closeDate}
-                onChange={(date) => {
-                  setValue("closeDate", new Date(date!), {
-                    shouldValidate: true,
-                  });
-                }}
-                label="Close on"
-                placeholder="Select close date"
-              />
-              <div className="space-y-[0.4rem]">
-                <Label htmlFor="closeTime">Close at</Label>
-                <Input
-                  id="closeTime"
-                  type="time"
-                  step="1"
-                  {...register("closeTime", { required: true })}
-                  className="py-[2rem] text-black/60"
-                  variant="outline"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-x-[1.6rem]">
-              <div className="space-y-[0.4rem]">
-                <Label htmlFor="timeLimit">Time limit (in minutes)</Label>
-                <Input
-                  id="timeLimit"
-                  type="number"
+                  id="title"
+                  type="text"
                   inputSize="sm"
                   variant="outline"
-                  placeholder="e.g. 30"
-                  {...register("timeLimit", { required: true, min: 1 })}
+                  placeholder="e.g. Quiz 1"
+                  {...register("title", { required: true })}
                   className="w-full"
                 />
               </div>
               <div className="space-y-[0.4rem]">
-                <Label htmlFor="maxGrade">Max grade</Label>
-                <Input
-                  id="maxGrade"
-                  type="number"
-                  inputSize="sm"
-                  variant="outline"
-                  placeholder="e.g. 20"
-                  {...register("maxGrade", { required: true, min: 1 })}
-                  className="w-full"
+                <Label htmlFor="description" required={false}>
+                  Quiz description
+                </Label>
+                <Textarea
+                  id="description"
+                  placeholder="e.g. This quiz covers Digital Literacy concepts..."
+                  {...register("description")}
                 />
               </div>
-            </div>
-            <div className="flex flex-col">
-              <Label className="mb-[0.4rem]">
-                Questions ({questions.length} selected)
-              </Label>
-
-              <ScrollArea className="h-[30rem] w-full rounded-xs border border-black/60 p-[1.2rem]">
-                <ul className="space-y-[1.2rem] font-semibold text-black">
-                  {questions.map((question, i) => (
-                    <li
-                      className="flex items-center justify-between px-[0.4rem] py-[0.8rem]"
-                      key={question}
-                    >
-                      <div className="space-x-[0.8rem]">
-                        <span>{i + 1})</span>
-                        <span>{question}</span>
-                      </div>
-                      <button
-                        className="grid h-[2rem] w-[2rem] place-content-center rounded-full bg-gray-dark"
-                        type="button"
-                        aria-label="remove question"
-                        onClick={() => removeQuestion(question)}
-                      >
-                        <X className="w-[1.2rem] text-white" />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-                <div className="grid grid-cols-[1fr_auto] gap-[1.2rem] py-[0.8rem]">
-                  <ComboBox
-                    options={filteredOptions}
-                    placeholder="Select Question..."
-                    value={comboBoxValue}
-                    onChange={setComboBoxValue}
+              <div className="grid grid-cols-2 gap-x-[1.6rem]">
+                {/* Available Date and Time */}
+                <DateInput
+                  value={availableDate}
+                  onChange={(date) => {
+                    setValue("availableDate", new Date(date!), {
+                      shouldValidate: true,
+                    });
+                  }}
+                  label="Available on"
+                  placeholder="Select available date"
+                />
+                <div className="space-y-[0.4rem]">
+                  <Label htmlFor="availableTime">Available at</Label>
+                  <Input
+                    id="availableTime"
+                    type="time"
+                    step="1"
+                    {...register("availableTime", { required: true })}
+                    className="py-[2rem] text-black/60"
+                    variant="outline"
                   />
-                  <PrimaryButton
-                    className="max-h-[4rem]"
-                    variant="secondary"
-                    onClick={() => addQuestion(comboBoxValue)}
-                    type="button"
-                  >
-                    Create
-                  </PrimaryButton>
                 </div>
-                <ScrollBar className="border-b-blue" />
-              </ScrollArea>
-            </div>
-          </div>
-          <PrimaryButton
-            type="submit"
-            isLoading={isLoading}
-            loadingText="Creating Quiz..."
-            disabled={!isFormValid || isLoading}
-            className="w-full bg-blue text-white hover:bg-blue disabled:bg-black"
-          >
-            Create Quiz
-          </PrimaryButton>
-        </form>
+              </div>
+              <div className="grid grid-cols-2 gap-x-[1.6rem]">
+                {/* Close Date and Time */}
+                <DateInput
+                  value={closeDate}
+                  onChange={(date) => {
+                    setValue("closeDate", new Date(date!), {
+                      shouldValidate: true,
+                    });
+                  }}
+                  label="Close on"
+                  placeholder="Select close date"
+                />
+                <div className="space-y-[0.4rem]">
+                  <Label htmlFor="closeTime">Close at</Label>
+                  <Input
+                    id="closeTime"
+                    type="time"
+                    step="1"
+                    {...register("closeTime", { required: true })}
+                    className="py-[2rem] text-black/60"
+                    variant="outline"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-x-[1.6rem]">
+                <div className="space-y-[0.4rem]">
+                  <Label htmlFor="timeLimit">Time limit (in minutes)</Label>
+                  <Input
+                    id="timeLimit"
+                    type="number"
+                    inputSize="sm"
+                    variant="outline"
+                    placeholder="e.g. 30"
+                    {...register("timeLimit", { required: true, min: 1 })}
+                    className="w-full"
+                  />
+                </div>
+                <div className="space-y-[0.4rem]">
+                  <Label htmlFor="maxGrade">Max grade</Label>
+                  <Input
+                    id="maxGrade"
+                    type="number"
+                    inputSize="sm"
+                    variant="outline"
+                    placeholder="e.g. 20"
+                    {...register("maxGrade", { required: true, min: 1 })}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <Label className="mb-[0.4rem]">
+                  Questions ({questions.length} selected)
+                </Label>
 
-        <DialogDescription className="sr-only">
-          A form that enables instructors to create quizzes for modules within a
-          course.
-        </DialogDescription>
+                <ScrollArea className="h-[30rem] w-full rounded-xs border border-black/60 p-[1.2rem]">
+                  <ul className="space-y-[1.2rem] font-semibold text-black">
+                    {questions.map((question, i) => (
+                      <li
+                        className="flex items-center justify-between px-[0.4rem] py-[0.8rem]"
+                        key={question}
+                      >
+                        <div className="space-x-[0.8rem]">
+                          <span>{i + 1})</span>
+                          <span>{question}</span>
+                        </div>
+                        <button
+                          className="grid h-[2rem] w-[2rem] place-content-center rounded-full bg-gray-dark"
+                          type="button"
+                          aria-label="remove question"
+                          onClick={() => removeQuestion(question)}
+                        >
+                          <X className="w-[1.2rem] text-white" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="grid grid-cols-[1fr_auto] gap-[1.2rem] py-[0.8rem]">
+                    <ComboBox
+                      options={filteredOptions}
+                      placeholder="Select Question..."
+                      value={comboBoxValue}
+                      onChange={setComboBoxValue}
+                    />
+                    <PrimaryButton
+                      className="max-h-[4rem]"
+                      variant="secondary"
+                      onClick={() => addQuestion(comboBoxValue)}
+                      type="button"
+                    >
+                      Create
+                    </PrimaryButton>
+                  </div>
+                  <ScrollBar className="border-b-blue" />
+                </ScrollArea>
+              </div>
+            </div>
+            <PrimaryButton
+              type="submit"
+              isLoading={isLoading}
+              loadingText="Creating Quiz..."
+              disabled={!isFormValid || isLoading}
+              className="w-full bg-blue text-white hover:bg-blue disabled:bg-black"
+            >
+              Create Quiz
+            </PrimaryButton>
+          </form>
+
+          <DialogDescription className="sr-only">
+            A form that enables instructors to create quizzes for modules within
+            a course.
+          </DialogDescription>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
