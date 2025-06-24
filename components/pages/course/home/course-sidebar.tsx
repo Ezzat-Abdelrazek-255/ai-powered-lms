@@ -76,7 +76,7 @@ async function CourseSidebar({ course }: { course: Course }) {
                 {module.quiz.map((item) => (
                   <li key={item.quizId}>
                     <Link
-                      href={`/course/${course.courseId}/quizzes/${item.quizId}`}
+                      href={`/course/${course.courseId}/quizzes`}
                       className="flex items-center gap-2 hover:underline"
                     >
                       <AbstractSvg className="w-6" />
@@ -106,7 +106,7 @@ async function CourseSidebar({ course }: { course: Course }) {
               {assignments.map((assignment) => (
                 <li key={assignment.assignmentId}>
                   <Link
-                    href={`/course/${course.courseId}/assignments/${assignment.assignmentId}`}
+                    href={`/course/${course.courseId}/submissions/${assignment.assignmentId}`}
                     className="flex items-center gap-2 hover:underline"
                   >
                     <AbstractSvg className="w-6" />
@@ -130,7 +130,7 @@ async function CourseSidebar({ course }: { course: Course }) {
               {quizzes.map((quiz) => (
                 <li key={quiz.quizId}>
                   <Link
-                    href={`/course/${course.courseId}/quizzes/${quiz.quizId}`}
+                    href={`/course/${course.courseId}/quizzes`}
                     className="flex items-center gap-2 hover:underline"
                   >
                     <AbstractSvg className="w-6" />
