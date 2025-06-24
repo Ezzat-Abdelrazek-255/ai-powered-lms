@@ -13,7 +13,7 @@ const QuestionCard = ({ question }: { question: Question }) => {
           <li
             key={op.choiceId}
             className={cn(
-              "rounded-full border border-black px-[1.6rem] py-[1rem] leading-none",
+              "truncate whitespace-nowrap rounded-full border border-black px-[1.6rem] py-[1rem] leading-none",
               op.choice === question.rightAnswer && "bg-black text-white",
             )}
           >

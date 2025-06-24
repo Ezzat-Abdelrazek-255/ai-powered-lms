@@ -1,6 +1,6 @@
 import { revalidatePathServer } from "@/actions";
 import { createClient } from "@/libs/supabase/client";
-import { AuthInputs } from "@/types";
+import { AuthInputs } from "@/types/auth";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export async function login(formData: AuthInputs, router: AppRouterInstance) {

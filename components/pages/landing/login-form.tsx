@@ -4,7 +4,7 @@ import ErrorMsg from "@/components/ui/error-msg";
 import { Input } from "@/components/ui/input";
 import PrimaryButton from "@/components/ui/primary-button";
 import { login } from "@/services/auth";
-import { AuthInputs } from "@/types";
+import { AuthInputs } from "@/types/auth";
 import { useState } from "react";
 import { useRouter } from "@bprogress/next/app";
 import { useForm, SubmitHandler } from "react-hook-form";

@@ -288,7 +288,7 @@ const QuizPage = ({
   }
 
   return (
-    <div className="relative flex min-h-[calc(100vh-var(--header-height))] flex-col px-[var(--container-px)] pb-[6.4rem]">
+    <div className="relative flex min-h-[calc(100vh-var(--header-height))] max-w-[calc(100vw-3px)] flex-col overflow-hidden px-[var(--container-px)] pb-[6.4rem]">
       <div className="mb-[2.4rem] flex w-full items-center justify-between border-b-[1px] border-b-white/20 pb-[2.4rem] pt-[3.2rem]">
         <div className="max-w-[var(--container-max-width)] space-y-[1.6rem]">
           <CourseSectionTitle>{quiz.title}</CourseSectionTitle>

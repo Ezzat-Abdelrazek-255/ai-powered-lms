@@ -4,7 +4,7 @@ import AbstractSvg3 from "../../../../public/vectors/abstract-4.svg";
 import DocumentSvg from "../../../../public/vectors/document.svg";
 import Link from "next/link";
 import { Assignment, Quiz } from "@/types/courses";
-import { cn } from "@/utils";
+import { cn, getUserMetadata } from "@/utils";
 import { getSubmissionByAssignmentId } from "@/services/course";
 import { createClient } from "@/libs/supabase/server";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ const SubmissionCard = async ({
 }) => {
   const isQuiz = variant === "quiz";
   const supabase = await createClient();
+  const userMetadata = await getUserMetadata(supabase);
 
   // Get submission only for assignments
   const submission = isQuiz
@@ -81,12 +82,24 @@ const SubmissionCard = async ({
       buttonDisabled = true;
     } else if (endTimeDiff && endTimeDiff > 0) {
       // Quiz is active
-      const timeLeft = Math.ceil(endTimeDiff / (60 * 1000));
-      if (timeLeft > 60) {
-        const hoursLeft = Math.ceil(timeLeft / 60);
-        statusMessage = `${hoursLeft}h remaining`;
+      const timeLeftMs = endTimeDiff;
+
+      const seconds = Math.floor(timeLeftMs / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      const weeks = Math.floor(days / 7);
+
+      if (weeks > 0) {
+        statusMessage = `${weeks}w ${days % 7}d remaining`;
+      } else if (days > 0) {
+        statusMessage = `${days}d ${hours % 24}h remaining`;
+      } else if (hours > 0) {
+        statusMessage = `${hours}h ${minutes % 60}m remaining`;
+      } else if (minutes > 0) {
+        statusMessage = `${minutes}m ${seconds % 60}s remaining`;
       } else {
-        statusMessage = `${timeLeft}m remaining`;
+        statusMessage = `${seconds}s remaining`;
       }
       colorClass = "bg-green text-black";
       buttonText = "Attempt";
@@ -133,6 +146,10 @@ const SubmissionCard = async ({
       className={cn(
         "grid grid-cols-5 items-center justify-between rounded-sm bg-beige px-[1.6rem] py-[2.4rem] leading-[85%] text-black",
         variant === "quiz" && "grid-cols-6",
+        userMetadata.role === "instructor" && "grid-cols-4",
+        userMetadata.role === "instructor" &&
+        variant === "quiz" &&
+        "grid-cols-5",
       )}
     >
       {/* Date Column */}
@@ -211,24 +228,26 @@ const SubmissionCard = async ({
       </span>
 
       {/* Action Button Column */}
-      <Button
-        variant="secondary"
-        className="w-fit justify-self-end"
-        asChild
-        disabled={buttonDisabled}
-      >
-        {buttonDisabled ? (
-          <span>{buttonText}</span>
-        ) : isQuiz ? (
-          <CreateAttempt courseId={courseId} quizId={quiz?.quizId} />
-        ) : (
-          <Link
-            href={`/course/${courseId}/submissions/${assignment?.assignmentId}`}
-          >
-            {buttonText}
-          </Link>
-        )}
-      </Button>
+      {userMetadata.role === "student" && (
+        <Button
+          variant="secondary"
+          className="w-fit justify-self-end"
+          asChild
+          disabled={buttonDisabled}
+        >
+          {buttonDisabled ? (
+            <span>{buttonText}</span>
+          ) : isQuiz ? (
+            <CreateAttempt courseId={courseId} quizId={quiz?.quizId} />
+          ) : (
+            <Link
+              href={`/course/${courseId}/submissions/${assignment?.assignmentId}`}
+            >
+              {buttonText}
+            </Link>
+          )}
+        </Button>
+      )}
     </article>
   );
 };
