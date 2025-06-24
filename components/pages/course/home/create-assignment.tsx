@@ -55,7 +55,6 @@ const CreateAssignment = ({
 
   const title = watch("title");
   const dueDate = watch("dueDate");
-  const dueTime = watch("dueTime");
 
   const onSubmit = async (data: Inputs) => {
     try {

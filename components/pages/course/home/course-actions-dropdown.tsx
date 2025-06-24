@@ -6,39 +6,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  AbstractSvg,
-  AbstractSvg2,
-  AbstractSvg3,
-  AbstractSvg4,
-  AbstractSvg5,
-} from "@/components/ui/icons";
+import { AbstractSvg } from "@/components/ui/icons";
 import UploadContent from "./upload-content";
 import CreateAssignment from "./create-assignment";
-import { Dialog } from "@/components/ui/dialog";
 import CreateQuiz from "../quizzes/create-quiz";
-const dropdownMenuItems = [
-  {
-    label: "Upload content",
-    Icon: AbstractSvg,
-  },
-  {
-    label: "Create a submission",
-    Icon: AbstractSvg2,
-  },
-  {
-    label: "Create a quiz",
-    Icon: AbstractSvg3,
-  },
-  {
-    label: "Delete module",
-    Icon: AbstractSvg4,
-  },
-  {
-    label: "Rename module",
-    Icon: AbstractSvg5,
-  },
-];
 
 export default function CourseActions({
   courseId,

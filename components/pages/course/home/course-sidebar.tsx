@@ -41,10 +41,12 @@ async function CourseSidebar({ course }: { course: Course }) {
               <AccordionTrigger className="flex flex-row-reverse justify-end gap-[1.2rem] p-0 text-[1.6rem] leading-[85%] [&>div]:border-0 [&[data-state=open]_svg]:rotate-[135deg] [&_svg]:h-[1.6rem] [&_svg]:w-[1.6rem] [&_svg]:rotate-45 [&_svg]:fill-white">
                 {module.title}
               </AccordionTrigger>
-              <CourseActions
-                courseId={course.courseId}
-                moduleId={module.moduleId}
-              />
+              {role === "instructor" && (
+                <CourseActions
+                  courseId={course.courseId}
+                  moduleId={module.moduleId}
+                />
+              )}
             </div>
             <AccordionContent className="px-[3.2rem] py-[0.8rem]">
               <ul className="flex flex-col gap-[1.6rem] border-l-[1px] border-l-white/40 pl-[1.6rem] text-[1.4rem] text-white/80">

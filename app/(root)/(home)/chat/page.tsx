@@ -16,12 +16,14 @@ interface Message {
   role: "user" | "assistant";
   content: string;
   fileName?: string;
+  title?: string;
 }
 
 const ChatPage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -55,7 +57,7 @@ const ChatPage: React.FC = () => {
 
     // Prepare form data
     const formData = new FormData();
-    formData.append("prompt", inputText.trim());
+    formData.append("text", inputText.trim());
     if (file) formData.append("file", file);
 
     setInputText("");
@@ -63,21 +65,77 @@ const ChatPage: React.FC = () => {
     if (textareaRef.current) textareaRef.current.style.height = "auto";
 
     try {
-      const response = await fetch("http://127.0.0.1/generate", {
+      setIsLoading(true);
+      const response = await fetch("http://127.0.0.1:5000/generate", {
         method: "POST",
         body: formData,
       });
-      const data = await response.json();
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: data.response },
-      ]);
+
+      const contentType = response.headers.get("Content-Type");
+
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        console.log("✅ JSON Response:", data);
+
+        if (Array.isArray(data.response)) {
+          data.response.forEach(
+            (item: { title: string; paragraphs: string[] }) =>
+              setMessages((prev) => [
+                ...prev,
+                {
+                  role: "assistant",
+                  content: item.paragraphs[0],
+                  title: item.title,
+                },
+              ]),
+          );
+        } else if (data.download_url) {
+          window.open(`http://127.0.0.1:5000${data.download_url}`, "_blank");
+        }
+      } else {
+        // It's a file (PDF, PPTX, etc.)
+        const blob = await response.blob();
+        const fileURL = URL.createObjectURL(blob);
+
+        let filename = "downloaded_file";
+        const contentDisposition = response.headers.get("Content-Disposition");
+        if (contentDisposition && contentDisposition.includes("filename=")) {
+          filename = contentDisposition
+            .split("filename=")[1]
+            .replaceAll('"', "")
+            .trim();
+        }
+
+        const a = document.createElement("a");
+        a.href = fileURL;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        URL.revokeObjectURL(fileURL);
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: `Generated file: ${filename} (download started)`,
+            title: "File Ready",
+          },
+        ]);
+      }
     } catch (error) {
       console.error(error);
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Error: Unable to fetch response." },
+        {
+          role: "assistant",
+          content: "There was an error, Please try again",
+          title: "Error",
+        },
       ]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -90,16 +148,24 @@ const ChatPage: React.FC = () => {
     >
       {/* Chat window */}
       {messages.length > 0 && (
-        <div className="flex flex-1 flex-col space-y-4 overflow-auto p-4">
+        <div className="mx-auto flex w-1/2 flex-1 flex-col space-y-8 overflow-auto py-[4rem]">
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`max-w-[75%] whitespace-pre-wrap rounded-lg p-3 ${msg.role === "user"
-                  ? "bg-blue-500 self-end text-white"
-                  : "self-start bg-white text-gray-800"
-                }`}
+              className={`max-w-[75%] whitespace-pre-wrap rounded-sm py-3 ${
+                msg.role === "user"
+                  ? "self-end bg-gray-light p-[1.6rem] text-white"
+                  : "self-start bg-transparent"
+              }`}
             >
-              {msg.content}
+              <div>
+                {msg.title && (
+                  <h2 className="mb-[0.8rem] text-[2.4rem] font-bold">
+                    {msg.title}
+                  </h2>
+                )}
+                <p className="leading-[150%]">{msg.content}</p>
+              </div>
               {msg.fileName && (
                 <div className="mt-2 text-sm italic">
                   Attached file: {msg.fileName}
@@ -141,8 +207,10 @@ const ChatPage: React.FC = () => {
           />
           <PrimaryButton
             variant="secondary"
+            isLoading={isLoading}
             type="submit"
-            disabled={!inputText.trim()}
+            loadingText="Thinking..."
+            disabled={!inputText.trim() && !file}
           >
             Send
           </PrimaryButton>
