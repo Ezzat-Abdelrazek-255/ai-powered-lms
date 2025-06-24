@@ -21,9 +21,10 @@ interface QuizQuestion {
 
 interface Message {
   role: "user" | "assistant";
-  content: string;
+  content?: string;
   fileName?: string;
   title?: string;
+  paragraphs?: string[];
   quizQuestions?: QuizQuestion[];
 }
 
@@ -81,7 +82,7 @@ const ChatPage: React.FC = () => {
         const data = await response.json();
         console.log("✅ JSON Response:", data);
 
-        // Check for quiz-style nested format
+        // Detect and render quiz questions if present
         const quizItems =
           data?.response?.[0]?.paragraphs?.[0]?.response?.[0]?.paragraphs;
         const isQuizFormat = Array.isArray(quizItems) && quizItems[0]?.question;
@@ -103,8 +104,8 @@ const ChatPage: React.FC = () => {
                 ...prev,
                 {
                   role: "assistant",
-                  content: item.paragraphs[0],
                   title: item.title,
+                  paragraphs: item.paragraphs,
                 },
               ]),
           );
@@ -112,7 +113,7 @@ const ChatPage: React.FC = () => {
           window.open(`http://127.0.0.1:5000${data.download_url}`, "_blank");
         }
       } else {
-        // Handle file blob (PDF, PPTX, etc.)
+        // It's a file (PDF, DOCX, PPTX)
         const blob = await response.blob();
         const fileURL = URL.createObjectURL(blob);
 
@@ -184,26 +185,30 @@ const ChatPage: React.FC = () => {
 
                 {msg.quizQuestions ? (
                   <ul className="space-y-4 text-[1.6rem]">
-                    {msg.quizQuestions
-                      .filter((q) => q.question)
-                      .map((q, i) => (
-                        <li key={q.number}>
-                          <p className="font-semibold">
-                            {i + 1}. {q.question}{" "}
-                            <span className="text-sm italic text-white/50">
-                              ({q.type})
-                            </span>
-                          </p>
-                          {q.options.length > 0 && (
-                            <ul className="ml-4 mt-2 list-disc space-y-1">
-                              {q.options.map((opt, i) => (
-                                <li key={i}>{opt}</li>
-                              ))}
-                            </ul>
-                          )}
-                        </li>
-                      ))}
+                    {msg.quizQuestions.map((q) => (
+                      <li key={q.number}>
+                        <p className="font-semibold">
+                          {q.number}. {q.question}{" "}
+                          <span className="text-sm italic text-gray-500">
+                            ({q.type})
+                          </span>
+                        </p>
+                        {q.options.length > 0 && (
+                          <ul className="ml-4 mt-2 list-disc space-y-1">
+                            {q.options.map((opt, i) => (
+                              <li key={i}>{opt}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
                   </ul>
+                ) : msg.paragraphs ? (
+                  <div className="space-y-4 text-[1.6rem] leading-[150%]">
+                    {msg.paragraphs.map((p, i) => (
+                      <p key={i}>{p}</p>
+                    ))}
+                  </div>
                 ) : (
                   <p className="text-[1.6rem] leading-[150%]">{msg.content}</p>
                 )}
